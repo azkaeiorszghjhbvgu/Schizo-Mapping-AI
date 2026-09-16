@@ -9,7 +9,7 @@
 - **Grading criteria**: Creativity, Completeness, and Presentation skills.
 - **Due date**: 9 AM Tuesday, October 13, 2026.
 - **Things to turn in**:
-  - Web App URL (must be deployed onto a host computer) — _TODO: add deployed URL here_
+  - Web App URL (must be deployed onto a host computer) — https://schizo-mapping.netlify.app (temp)
   - A link to the GitHub repository, provided within the web app — see footer of `index.html`
   - Presentation clip link on YouTube (approx. 10–15 minutes) — _TODO: add video link here_
 
