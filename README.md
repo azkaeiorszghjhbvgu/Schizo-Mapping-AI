@@ -32,7 +32,10 @@ python -m http.server 8080
 
 then visit http://localhost:8080.
 
-## Actual Deployed
+## Notes
+
+THE
 
 https://schizo-mapping.netlify.app
+
 Server isn't live 24/7, can only visit when I turn it on, might change the deployment method later.
