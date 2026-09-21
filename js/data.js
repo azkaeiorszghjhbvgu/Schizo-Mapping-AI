@@ -25,7 +25,6 @@ const CITY_COORDS = {
   Zerind: [108, 531],
 };
 
-// Undirected weighted edges (road distances in km), from the classic AIMA Romania map.
 const EDGES = [
   ["Arad", "Zerind", 75],
   ["Arad", "Sibiu", 140],
@@ -52,46 +51,106 @@ const EDGES = [
   ["Urziceni", "Vaslui", 142],
 ];
 
-// Known book straight-line-distances to Bucharest, used only to calibrate
-// a pixel->km scale factor so the heuristic works for ANY start/goal pair,
-// not just goal = Bucharest.
 const SLD_TO_BUCHAREST = {
-  Arad: 366, Bucharest: 0, Craiova: 160, Drobeta: 242, Eforie: 161,
-  Fagaras: 176, Giurgiu: 77, Hirsova: 151, Iasi: 226, Lugoj: 244,
-  Mehadia: 241, Neamt: 234, Oradea: 380, Pitesti: 100, Rimnicu: 193,
-  Sibiu: 253, Timisoara: 329, Urziceni: 80, Vaslui: 199, Zerind: 374,
+  Arad: 366,
+  Bucharest: 0,
+  Craiova: 160,
+  Drobeta: 242,
+  Eforie: 161,
+  Fagaras: 176,
+  Giurgiu: 77,
+  Hirsova: 151,
+  Iasi: 226,
+  Lugoj: 244,
+  Mehadia: 241,
+  Neamt: 234,
+  Oradea: 380,
+  Pitesti: 100,
+  Rimnicu: 193,
+  Sibiu: 253,
+  Timisoara: 329,
+  Urziceni: 80,
+  Vaslui: 199,
+  Zerind: 374,
 };
+
 
 function pixelDist(a, b) {
   const [ax, ay] = CITY_COORDS[a];
   const [bx, by] = CITY_COORDS[b];
+
   return Math.hypot(ax - bx, ay - by);
 }
 
-// Calibrate scale = km per pixel-unit by averaging over all cities vs Bucharest.
 const PIXEL_TO_KM_SCALE = (() => {
   let ratios = [];
+
   for (const city in SLD_TO_BUCHAREST) {
     if (city === "Bucharest") continue;
+
     const px = pixelDist(city, "Bucharest");
-    if (px > 0) ratios.push(SLD_TO_BUCHAREST[city] / px);
+
+    if (px > 0) {
+      ratios.push(
+        SLD_TO_BUCHAREST[city] / px
+      );
+    }
   }
-  return ratios.reduce((a, b) => a + b, 0) / ratios.length;
+
+  return (
+    ratios.reduce((a, b) => a + b, 0) /
+    ratios.length
+  );
 })();
 
 function straightLineHeuristic(a, b) {
-  return pixelDist(a, b) * PIXEL_TO_KM_SCALE;
+  return (
+    pixelDist(a, b) *
+    PIXEL_TO_KM_SCALE
+  );
 }
+
+function customHeuristic(city, goal) {
+  const straightDistance =
+    straightLineHeuristic(city, goal);
+
+  const connections =
+    GRAPH[city].length;
+
+  const connectivityPenalty =
+    20 / connections;
+
+  return (
+    straightDistance +
+    connectivityPenalty
+  );
+}
+
+
 
 function buildGraph() {
   const graph = {};
-  for (const city in CITY_COORDS) graph[city] = [];
-  for (const [a, b, w] of EDGES) {
-    graph[a].push({ to: b, cost: w });
-    graph[b].push({ to: a, cost: w });
+
+  for (const city in CITY_COORDS) {
+    graph[city] = [];
   }
+
+  for (const [a, b, w] of EDGES) {
+    graph[a].push({
+      to: b,
+      cost: w,
+    });
+
+    graph[b].push({
+      to: a,
+      cost: w,
+    });
+  }
+
   return graph;
 }
 
 const GRAPH = buildGraph();
-const CITY_NAMES = Object.keys(CITY_COORDS).sort();
+
+const CITY_NAMES =
+  Object.keys(CITY_COORDS).sort();
