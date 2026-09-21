@@ -2,91 +2,222 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Romania Map Pathfinding: Blind vs. Heuristic Search</title>
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+
+  <title>Romania Map Pathfinding</title>
+
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
+
   <nav class="navbar">
-    <a class="navbar-home" href="index.html">Home</a>
-    <div class="navbar-settings">
-      <button class="navbar-gear" type="button" aria-label="Settings" title="Settings">&#9881;</button>
-      <div class="navbar-menu">
-        <div class="navbar-menu-label">Theme</div>
-        <button class="navbar-theme-option" data-theme-choice="dark">Dark</button>
-        <button class="navbar-theme-option" data-theme-choice="light">Light</button>
-      </div>
-    </div>
+    <a href="index.html" class="navbar-home">
+      ← Schizo Mapping
+    </a>
   </nav>
+
 
   <header>
     <h1>Romania Map Pathfinding</h1>
-    <p class="subtitle">Uniform-Cost Search (blind) vs. A* Search (heuristic: straight-line distance)</p>
+
+    <p class="subtitle">
+      Uniform-Cost Search (blind) vs. A* Search
+    </p>
   </header>
 
+
   <section class="controls">
+
     <label>
       Start city
       <select id="start-city"></select>
     </label>
+
     <label>
       Goal city
       <select id="goal-city"></select>
     </label>
+
     <label>
       Algorithm
+
       <select id="mode-select">
-        <option value="both" selected>Both (compare)</option>
-        <option value="bfs">Uniform-Cost Search (UCS / Dijkstra's)</option>
+        <option value="both">Both (compare)</option>
+        <option value="bfs">Uniform-Cost Search</option>
         <option value="astar">A* Search</option>
       </select>
     </label>
-    <button id="run-btn">Run Search</button>
-    <span id="status" class="status"></span>
+
+
+    <button id="run-btn" type="button">
+      Run Search
+    </button>
+
+
+    <div class="playback-controls">
+
+      <button
+        id="playBtn"
+        type="button"
+        class="secondary"
+      >
+        ▶ Play
+      </button>
+
+      <button
+        id="pauseBtn"
+        type="button"
+        class="secondary"
+      >
+        Ⅱ Pause
+      </button>
+
+      <button
+        id="resetBtn"
+        type="button"
+        class="secondary"
+      >
+        ↺ Reset
+      </button>
+
+
+      <label class="speed-control">
+        Speed
+
+        <select id="speedSelect">
+
+          <option value="0.5">
+            0.5×
+          </option>
+
+          <option value="1" selected>
+            1×
+          </option>
+
+          <option value="2">
+            2×
+          </option>
+
+        </select>
+      </label>
+
+
+      <span
+        id="playbackStatus"
+        class="status"
+      >
+        Ready
+      </span>
+
+    </div>
+
   </section>
 
-  <section class="maps">
-    <div class="map-panel" id="bfs-panel">
-      <h2>Blind Search — Uniform-Cost Search (Dijkstra's)</h2>
-      <svg id="bfs-map" class="map"></svg>
-    </div>
-    <div class="map-panel" id="astar-panel">
-      <h2>Heuristic Search — A* (straight-line distance)</h2>
-      <svg id="astar-map" class="map"></svg>
-    </div>
-  </section>
 
+  <p
+    id="status"
+    class="status"
+    style="text-align: center;"
+  ></p>
+
+
+  <main class="maps">
+
+    <section
+      class="map-panel"
+      id="bfs-panel"
+    >
+
+      <h2>
+        01 / Blind Search — Uniform-Cost Search
+      </h2>
+
+      <svg
+        id="bfs-map"
+        class="map"
+        viewBox="0 0 600 430"
+      ></svg>
+
+    </section>
+
+
+    <section
+      class="map-panel"
+      id="astar-panel"
+    >
+
+      <h2>
+        02 / Heuristic Search — A*
+      </h2>
+
+      <svg
+        id="astar-map"
+        class="map"
+        viewBox="0 0 600 430"
+      ></svg>
+
+    </section>
+
+  </main>
+
+  <main class="maps">
+
+  <!-- UCS panel -->
+  <!-- A* panel -->
+
+</main>
   <section class="results">
+
     <h2>Comparison</h2>
+
     <table>
+
       <thead>
         <tr>
           <th>Algorithm</th>
           <th>Path</th>
           <th>Path Cost (km)</th>
           <th>Nodes Expanded</th>
-          <th>Max Frontier Size (space)</th>
+          <th>Max Frontier Size</th>
           <th>Runtime (ms)</th>
         </tr>
       </thead>
-      <tbody id="results-body"></tbody>
+
+      <tbody id="results-body">
+      </tbody>
+
     </table>
+
   </section>
 
+
+  <div
+    id="cityTooltip"
+    class="city-tooltip"
+  >
+    <div class="tooltip-city"></div>
+    <div class="tooltip-g"></div>
+    <div class="tooltip-h"></div>
+    <div class="tooltip-f"></div>
+  </div>
+
+
   <footer>
-    <p>by Schizo Mapping</p>
-    <p>
-      Source code:
-      <a href="https://github.com/azkaeiorszghjhbvgu/Schizo-Mapping-AI" rel="noopener">
-        GitHub Repository
-      </a>
-    </p>
+    by Schizo Mapping
   </footer>
+
 
   <script src="js/data.js"></script>
   <script src="js/search.js"></script>
   <script src="js/map.js"></script>
-  <script src="js/app.js"></script>
   <script src="js/navbar.js"></script>
+  <script src="js/app.js"></script>
+
 </body>
+
 </html>
