@@ -359,7 +359,7 @@ async function runComparison() {
 
   if (runAstar) {
     renderRow(
-      "A* Search (heuristic)",
+      "A* Search (Fruit Fly Scent)",
       astarResult
     );
   }
@@ -471,7 +471,7 @@ modeSelect.addEventListener(
 
 runComparison();
 
-swapBtn.addEventListener(
+swapBtn?.addEventListener(
   "click",
   () => {
     const oldStart =

@@ -156,17 +156,18 @@ function uniformCostSearch(start, goal) {
   });
 }
 
-
+// A* Search using the Fruit Fly Scent Heuristic
 function aStarSearch(start, goal) {
   const t0 = performance.now();
 
 
 
+  // Start node: f = g (0) + h (scent heuristic)
   const frontier = [
     {
       node: start,
       g: 0,
-      f: straightLineHeuristic(
+      f: fruitFlyWindScentHeuristic(
         start,
         goal
       )
@@ -194,6 +195,7 @@ function aStarSearch(start, goal) {
 
   
 
+    // Pick node with lowest f-score
     let bestIdx = 0;
 
     for (let i = 1; i < frontier.length; i++) {
@@ -245,6 +247,7 @@ function aStarSearch(start, goal) {
     }
 
   
+    // Check neighbors: calculate tentative g + scent h-score
     for (
       const { to, cost }
       of GRAPH[node]
@@ -272,7 +275,7 @@ function aStarSearch(start, goal) {
           g: tentativeG,
           f:
             tentativeG +
-            straightLineHeuristic(
+            fruitFlyWindScentHeuristic(
               to,
               goal
             )
