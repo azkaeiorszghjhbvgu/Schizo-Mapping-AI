@@ -17,8 +17,8 @@
 
 | | Blind search | Heuristic search |
 |---|---|---|
-| Algorithm | Uniform-Cost Search (UCS / Dijkstra's) | A* Search |
-| Informed by | Accumulated path cost only | Path cost + straight-line distance to goal |
+| Algorithm | Uniform-Cost Search (UCS / Dijkstra's) | A* Search (Fruit Fly Scent) |
+| Informed by | Accumulated path cost only | Path cost + Fruit Fly Scent & Wind heuristic |
 | Optimal (cost-wise) | Yes | Yes (admissible heuristic) |
 | Metrics compared | Path cost, nodes expanded, max frontier size, runtime | Same |
 

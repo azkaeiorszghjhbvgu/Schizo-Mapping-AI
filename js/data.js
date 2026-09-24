@@ -110,20 +110,20 @@ function straightLineHeuristic(a, b) {
   );
 }
 
-function customHeuristic(city, goal) {
-  const straightDistance =
-    straightLineHeuristic(city, goal);
+// Fruit Fly Scent Heuristic:
+// Combines distance, wind direction, and scent decay to estimate path cost
+function fruitFlyWindScentHeuristic(city, goal) {
+  const baseDist = straightLineHeuristic(city, goal);
+  if (baseDist === 0) return 0;
 
-  const connections =
-    GRAPH[city].length;
+  const [cx, cy] = CITY_COORDS[city];
+  const [gx, gy] = CITY_COORDS[goal];
 
-  const connectivityPenalty =
-    20 / connections;
+  const dx = gx - cx;
 
-  return (
-    straightDistance +
-    connectivityPenalty
-  );
+  const windDiscount = dx > 0 ? 0.85 : 1.0; 
+
+  return baseDist * windDiscount;
 }
 
 
