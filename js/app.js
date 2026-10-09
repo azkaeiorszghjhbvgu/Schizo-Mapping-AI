@@ -14,7 +14,6 @@ const statusEl = document.getElementById("status");
 const playBtn = document.getElementById("playBtn");
 const pauseBtn = document.getElementById("pauseBtn");
 const resetBtn = document.getElementById("resetBtn");
-const swapBtn = document.getElementById("swapBtn");
 const speedSelect = document.getElementById("speedSelect");
 const playbackStatus = document.getElementById("playbackStatus");
 
@@ -518,25 +517,4 @@ goalSelect.addEventListener(
 modeSelect.addEventListener(
   "change",
   runComparison
-);
-
-
-
-swapBtn?.addEventListener(
-  "click",
-  () => {
-    const oldStart =
-      startSelect.value;
-
-    const oldGoal =
-      goalSelect.value;
-
-    startSelect.value =
-      oldGoal;
-
-    goalSelect.value =
-      oldStart;
-
-    runComparison();
-  }
 );
