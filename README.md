@@ -9,7 +9,7 @@
 - **Grading criteria**: Creativity, Completeness, and Presentation skills.
 - **Due date**: 9 AM Tuesday, October 13, 2026.
 - **Things to turn in**:
-  - Web App URL (must be deployed onto a host computer) — https://schizo-mapping.netlify.app (temp)
+  - Web App URL (must be deployed onto a host computer) — https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
   - A link to the GitHub repository, provided within the web app — see footer of `index.html`
   - Presentation clip link on YouTube (approx. 10–15 minutes) — _TODO: add video link here_
 
@@ -34,8 +34,4 @@ then visit http://localhost:8080.
 
 ## Notes
 
-THE
-
-https://schizo-mapping.netlify.app
-
-Server isn't live 24/7, can only visit when I turn it on, might change the deployment method later.
+Web now changed to https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
