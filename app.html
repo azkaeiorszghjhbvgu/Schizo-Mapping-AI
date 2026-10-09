@@ -35,13 +35,15 @@
 
     <label>
       Start city
-      <select id="start-city"></select>
+      <input type="search" id="start-city" list="city-list" placeholder="Select city" autocomplete="off" />
     </label>
 
     <label>
       Goal city
-      <select id="goal-city"></select>
+      <input type="search" id="goal-city" list="city-list" placeholder="Select city" autocomplete="off" />
     </label>
+
+    <datalist id="city-list"></datalist>
 
     <label>
       Algorithm
@@ -166,7 +168,7 @@
 
   </main>
 
-  
+
   <section class="results">
 
     <h2>Comparison</h2>

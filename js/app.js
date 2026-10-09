@@ -26,22 +26,15 @@ let animationSpeed = 1;
 let animationToken = 0;
 
 
-function populateSelect(select) {
-  select.innerHTML =
-    '<option value="" selected disabled hidden>Select city</option>';
+const cityList = document.getElementById("city-list");
 
-  for (const city of CITY_NAMES) {
-    const opt = document.createElement("option");
+for (const city of CITY_NAMES) {
+  const opt = document.createElement("option");
 
-    opt.value = city;
-    opt.textContent = city;
+  opt.value = city;
 
-    select.appendChild(opt);
-  }
+  cityList.appendChild(opt);
 }
-
-populateSelect(startSelect);
-populateSelect(goalSelect);
 
 drawBaseMap(bfsSvg);
 drawBaseMap(astarSvg);
@@ -247,9 +240,10 @@ function renderRow(
 
 
 async function runComparison() {
+  // typed text can be anything, so only accept exact city names
   if (
-    !startSelect.value ||
-    !goalSelect.value ||
+    !CITY_NAMES.includes(startSelect.value) ||
+    !CITY_NAMES.includes(goalSelect.value) ||
     !modeSelect.value
   ) {
     statusEl.textContent =

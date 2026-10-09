@@ -232,7 +232,8 @@ header h1 {
 }
 
 
-select {
+select,
+input {
   padding: 7px 10px;
 
   background:
