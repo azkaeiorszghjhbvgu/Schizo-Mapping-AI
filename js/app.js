@@ -1,7 +1,6 @@
 const startSelect = document.getElementById("start-city");
 const goalSelect = document.getElementById("goal-city");
 const modeSelect = document.getElementById("mode-select");
-const runBtn = document.getElementById("run-btn");
 
 const bfsSvg = document.getElementById("bfs-map");
 const astarSvg = document.getElementById("astar-map");
@@ -287,9 +286,6 @@ async function runComparison() {
   astarPanel.hidden =
     !runAstar;
 
-  runBtn.disabled =
-    true;
-
   statusEl.textContent =
     `Searching from ${start} to ${goal}...`;
 
@@ -410,9 +406,6 @@ async function runComparison() {
     playbackStatus.textContent =
       "Complete";
   }
-
-  runBtn.disabled =
-    false;
 }
 
 
@@ -462,9 +455,6 @@ resetBtn.addEventListener(
 
     playbackStatus.textContent =
       "Ready";
-
-    runBtn.disabled =
-      false;
   }
 );
 
@@ -481,8 +471,14 @@ speedSelect.addEventListener(
 );
 
 
-runBtn.addEventListener(
-  "click",
+// "input" also fires when a city is picked from the datalist
+startSelect.addEventListener(
+  "input",
+  runComparison
+);
+
+goalSelect.addEventListener(
+  "input",
   runComparison
 );
 
