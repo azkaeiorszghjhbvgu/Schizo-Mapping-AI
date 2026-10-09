@@ -22,6 +22,33 @@ const playbackStatus = document.getElementById("playbackStatus");
 let isPaused = false;
 let animationSpeed = 1;
 let animationToken = 0;
+let isRunning = false;
+
+
+// typed text can be anything, so map it to a real city name (any case) or undefined
+function findCity(input) {
+  const typed = input.value.trim().toLowerCase();
+
+  return CITY_NAMES.find(
+    (city) => city.toLowerCase() === typed
+  );
+}
+
+
+// cancel any animation and clear the maps and results
+function stopRun() {
+  animationToken++;
+
+  isPaused = false;
+  isRunning = false;
+
+  drawBaseMap(bfsSvg);
+  drawBaseMap(astarSvg);
+
+  resultsBody.innerHTML = "";
+
+  playbackStatus.textContent = "Ready";
+}
 
 
 // each box's list leaves out the city chosen in the other box
@@ -42,8 +69,8 @@ function fillCityList(list, excludeCity) {
 }
 
 function refreshCityLists() {
-  fillCityList(startSelect.list, goalSelect.value);
-  fillCityList(goalSelect.list, startSelect.value);
+  fillCityList(startSelect.list, findCity(goalSelect));
+  fillCityList(goalSelect.list, findCity(startSelect));
 }
 
 refreshCityLists();
@@ -252,12 +279,19 @@ function renderRow(
 
 
 async function runComparison() {
-  // typed text can be anything, so only accept exact city names
+  const start =
+    findCity(startSelect);
+
+  const goal =
+    findCity(goalSelect);
+
   if (
-    !CITY_NAMES.includes(startSelect.value) ||
-    !CITY_NAMES.includes(goalSelect.value) ||
+    !start ||
+    !goal ||
     !modeSelect.value
   ) {
+    stopRun();
+
     statusEl.textContent =
       "Select a start city, goal city and algorithm.";
 
@@ -265,7 +299,9 @@ async function runComparison() {
   }
 
   // the lists hide this, but the same name can still be typed into both boxes
-  if (startSelect.value === goalSelect.value) {
+  if (start === goal) {
+    stopRun();
+
     statusEl.textContent =
       "Start and goal must be different cities.";
 
@@ -278,17 +314,12 @@ async function runComparison() {
     animationToken;
 
   isPaused = false;
+  isRunning = true;
 
   if (playbackStatus) {
     playbackStatus.textContent =
       "Running...";
   }
-
-  const start =
-    startSelect.value;
-
-  const goal =
-    goalSelect.value;
 
   const mode =
     modeSelect.value;
@@ -416,6 +447,8 @@ async function runComparison() {
   statusEl.textContent =
     `Done. ${summaryParts.join("; ")}.`;
 
+  isRunning = false;
+
   if (playbackStatus) {
     playbackStatus.textContent =
       "Complete";
@@ -426,6 +459,10 @@ async function runComparison() {
 playBtn.addEventListener(
   "click",
   () => {
+    if (!isRunning) {
+      return;
+    }
+
     isPaused = false;
 
     playbackStatus.textContent =
@@ -438,6 +475,10 @@ playBtn.addEventListener(
 pauseBtn.addEventListener(
   "click",
   () => {
+    if (!isRunning) {
+      return;
+    }
+
     isPaused = true;
 
     playbackStatus.textContent =
@@ -449,26 +490,10 @@ pauseBtn.addEventListener(
 resetBtn.addEventListener(
   "click",
   () => {
-    animationToken++;
-
-    isPaused = false;
-
-    drawBaseMap(
-      bfsSvg
-    );
-
-    drawBaseMap(
-      astarSvg
-    );
-
-    resultsBody.innerHTML =
-      "";
+    stopRun();
 
     statusEl.textContent =
       "";
-
-    playbackStatus.textContent =
-      "Ready";
 
     startSelect.value = "";
     goalSelect.value = "";
@@ -499,7 +524,7 @@ speedSelect.addEventListener(
 startSelect.addEventListener(
   "input",
   () => {
-    fillCityList(goalSelect.list, startSelect.value);
+    fillCityList(goalSelect.list, findCity(startSelect));
 
     runComparison();
   }
@@ -508,7 +533,7 @@ startSelect.addEventListener(
 goalSelect.addEventListener(
   "input",
   () => {
-    fillCityList(startSelect.list, goalSelect.value);
+    fillCityList(startSelect.list, findCity(goalSelect));
 
     runComparison();
   }
