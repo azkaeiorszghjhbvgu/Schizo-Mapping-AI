@@ -26,23 +26,22 @@ let animationSpeed = 1;
 let animationToken = 0;
 
 
-function populateSelect(select, defaultCity) {
+function populateSelect(select) {
+  select.innerHTML =
+    '<option value="" selected disabled hidden>Select city</option>';
+
   for (const city of CITY_NAMES) {
     const opt = document.createElement("option");
 
     opt.value = city;
     opt.textContent = city;
 
-    if (city === defaultCity) {
-      opt.selected = true;
-    }
-
     select.appendChild(opt);
   }
 }
 
-populateSelect(startSelect, "Arad");
-populateSelect(goalSelect, "Bucharest");
+populateSelect(startSelect);
+populateSelect(goalSelect);
 
 drawBaseMap(bfsSvg);
 drawBaseMap(astarSvg);
@@ -248,6 +247,17 @@ function renderRow(
 
 
 async function runComparison() {
+  if (
+    !startSelect.value ||
+    !goalSelect.value ||
+    !modeSelect.value
+  ) {
+    statusEl.textContent =
+      "Select a start city, goal city and algorithm.";
+
+    return;
+  }
+
   animationToken++;
 
   const token =
@@ -488,8 +498,6 @@ modeSelect.addEventListener(
 );
 
 
-
-runComparison();
 
 swapBtn?.addEventListener(
   "click",
