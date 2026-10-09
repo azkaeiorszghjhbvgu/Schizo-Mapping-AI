@@ -4,7 +4,7 @@
   --bg: #0b0c0d;
   --panel: rgba(255, 255, 255, 0.045);
 
-  --text: #1a1a1a;
+  --text: #f0ede7;
   --muted: #aaa69f;
 
   --accent: #e8e1d7;
@@ -246,6 +246,11 @@ select {
   color: var(--text);
 
   font-size: 0.95rem;
+}
+
+
+option {
+  background: var(--bg);
 }
 
 
