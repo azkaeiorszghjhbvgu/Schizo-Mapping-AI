@@ -63,17 +63,14 @@
 
 
     <section class="visual">
-
-      <img
-        id="cityImage"
-        src="assets/romania.jpeg"
-        alt="Romanian city"
-      />
-
-      <button class="image-btn prev" onclick="prevImage()">←</button>
-
-      <button class="image-btn next" onclick="nextImage()">→</button>
-
+      <div class="image-container">
+        <div class="image-track" id="imageTrack">
+          <img src="assets/romania.jpeg" alt="Romania city" />
+          <img src="assets/romania2.jpeg" alt="Romania city" />
+          <img src="assets/romania3.jpeg" alt="Romania city" />
+        </div>
+      <button class="image-btn prev" onclick="changeImage(-1)">←</button>
+      <button class="image-btn next" onclick="changeImage(1)">→</button>
     </section>
 
   </main>
@@ -90,29 +87,18 @@
     let currentImage = 0;
 
 
-    function nextImage() {
-
-      currentImage++;
+    function changeImage(direction) {
+      currentImage += direction;
 
       if (currentImage >= images.length) {
         currentImage = 0;
-      }
-
-      document.getElementById("cityImage").src = images[currentImage];
-    }
-
-
-    function prevImage() {
-
-      currentImage--;
-
-      if (currentImage < 0) {
+      } else if (currentImage < 0) {
         currentImage = images.length - 1;
       }
 
-      document.getElementById("cityImage").src = images[currentImage];
+      const track = document.getElementById("imageTrack");
+      track.style.transform = `translateX(-${currentImage * 100}%)`;
     }
-
   </script>
 
 </body>
