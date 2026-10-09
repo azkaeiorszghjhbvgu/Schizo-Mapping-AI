@@ -25,15 +25,29 @@ let animationSpeed = 1;
 let animationToken = 0;
 
 
-const cityList = document.getElementById("city-list");
+// each box's list leaves out the city chosen in the other box
+function fillCityList(list, excludeCity) {
+  list.innerHTML = "";
 
-for (const city of CITY_NAMES) {
-  const opt = document.createElement("option");
+  for (const city of CITY_NAMES) {
+    if (city === excludeCity) {
+      continue;
+    }
 
-  opt.value = city;
+    const opt = document.createElement("option");
 
-  cityList.appendChild(opt);
+    opt.value = city;
+
+    list.appendChild(opt);
+  }
 }
+
+function refreshCityLists() {
+  fillCityList(startSelect.list, goalSelect.value);
+  fillCityList(goalSelect.list, startSelect.value);
+}
+
+refreshCityLists();
 
 drawBaseMap(bfsSvg);
 drawBaseMap(astarSvg);
@@ -251,6 +265,14 @@ async function runComparison() {
     return;
   }
 
+  // the lists hide this, but the same name can still be typed into both boxes
+  if (startSelect.value === goalSelect.value) {
+    statusEl.textContent =
+      "Start and goal must be different cities.";
+
+    return;
+  }
+
   animationToken++;
 
   const token =
@@ -302,13 +324,6 @@ async function runComparison() {
     drawBaseMap(
       astarSvg
     );
-  }
-
-  if (
-    start === goal
-  ) {
-    statusEl.textContent =
-      "Start and goal are the same city.";
   }
 
   const bfsResult =
@@ -472,14 +487,23 @@ speedSelect.addEventListener(
 
 
 // "input" also fires when a city is picked from the datalist
+// only refill the other box's list, so the open list under the cursor doesn't flicker
 startSelect.addEventListener(
   "input",
-  runComparison
+  () => {
+    fillCityList(goalSelect.list, startSelect.value);
+
+    runComparison();
+  }
 );
 
 goalSelect.addEventListener(
   "input",
-  runComparison
+  () => {
+    fillCityList(startSelect.list, goalSelect.value);
+
+    runComparison();
+  }
 );
 
 modeSelect.addEventListener(
