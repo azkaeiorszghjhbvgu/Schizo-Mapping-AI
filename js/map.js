@@ -77,7 +77,7 @@ function drawBaseMap(svg) {
 
   svg.setAttribute(
     "viewBox",
-    "60 250 530 350"
+    "45 250 560 350"
   );
 
   for (const [a, b] of EDGES) {
