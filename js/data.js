@@ -97,10 +97,8 @@ const PIXEL_TO_KM_SCALE = (() => {
     }
   }
 
-  return (
-    ratios.reduce((a, b) => a + b, 0) /
-    ratios.length
-  );
+  // Min ratio (not average) so the heuristic never overestimates road cost (admissible)
+  return Math.min(...ratios);
 })();
 
 function straightLineHeuristic(a, b) {
