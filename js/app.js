@@ -470,6 +470,15 @@ resetBtn.addEventListener(
 
     playbackStatus.textContent =
       "Ready";
+
+    startSelect.value = "";
+    goalSelect.value = "";
+    modeSelect.value = "";
+
+    refreshCityLists();
+
+    bfsPanel.hidden = false;
+    astarPanel.hidden = false;
   }
 );
 
