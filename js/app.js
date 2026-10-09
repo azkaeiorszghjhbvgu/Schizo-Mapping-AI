@@ -54,6 +54,24 @@ function sleep(ms) {
   });
 }
 
+// A single search on 20 cities takes microseconds, so one timing is mostly noise
+const TIMING_RUNS = 1000;
+
+function runTimed(searchFn, start, goal) {
+  const result = searchFn(start, goal);
+
+  const t0 = performance.now();
+
+  for (let i = 0; i < TIMING_RUNS; i++) {
+    searchFn(start, goal);
+  }
+
+  result.runtimeMs =
+    (performance.now() - t0) / TIMING_RUNS;
+
+  return result;
+}
+
 async function waitWhilePaused(token) {
   while (
     isPaused &&
@@ -221,7 +239,7 @@ function renderRow(
     </td>
 
     <td>
-      ${result.runtimeMs.toFixed(3)}
+      ${result.runtimeMs.toFixed(4)}
     </td>
   `;
 
@@ -295,7 +313,8 @@ async function runComparison() {
 
   const bfsResult =
     runBfs
-      ? uniformCostSearch(
+      ? runTimed(
+          uniformCostSearch,
           start,
           goal
         )
@@ -303,7 +322,8 @@ async function runComparison() {
 
   const astarResult =
     runAstar
-      ? aStarSearch(
+      ? runTimed(
+          aStarSearch,
           start,
           goal
         )
