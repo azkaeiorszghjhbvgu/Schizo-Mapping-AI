@@ -63,4 +63,18 @@
     },
     { passive: true }
   );
+
+  var explainBtn = document.getElementById("explainBtn");
+  var explanationDrawer = document.getElementById("explanationDrawer");
+  var drawerOverlay = document.getElementById("drawerOverlay");
+  var closeDrawerBtn = document.getElementById("closeDrawerBtn");
+
+  function toggleDrawer() {
+    if (explanationDrawer) explanationDrawer.classList.toggle("open");
+    if (drawerOverlay) drawerOverlay.classList.toggle("open");
+  }
+
+  if (explainBtn) explainBtn.addEventListener("click", toggleDrawer);
+  if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", toggleDrawer);
+  if (drawerOverlay) drawerOverlay.addEventListener("click", toggleDrawer);
 })();

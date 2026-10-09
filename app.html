@@ -11,6 +11,7 @@
   <title>Romania Map Pathfinding</title>
 
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous">
 </head>
 
 <body>
@@ -19,6 +20,9 @@
     <a href="index.html" class="navbar-home">
       ← Schizo Mapping
     </a>
+    <button id="explainBtn" type="button" class="navbar-explain">
+      Explain Search
+    </button>
   </nav>
 
 
@@ -200,11 +204,43 @@
     <div class="tooltip-f"></div>
   </div>
 
+  <div id="explanationDrawer" class="explanation-drawer">
+    <div class="drawer-header">
+      <h2>Search Mechanics</h2>
+      <button id="closeDrawerBtn" type="button" class="drawer-close">x</button>
+    </div>
+
+    <div class="drawer-content">
+      <div class="explanation-section">
+        <h3>01 / Uniform-Cost Search (UCS)</h3>
+        <p><strong>Type:</strong> Blind Search</p>
+        <p>UCS explores paths in increasing order of their actual path cost $g(n)$. It guarantees finding the optimal (shortest) path on weighted graphs because it always expands the cheapest node in the frontier.</p>
+      </div>
+
+      <hr class="drawer-divider" />
+
+      <div class="explanation-section">
+        <h3>02 / A* Search (Fruit Fly Scent)</h3>
+        <p><strong>Type:</strong> Heuristic Search (Bio-Inspired)</p>
+        <p>A* guides the search using a smart estimate ($f(n) = g(n) + h(n)$). Our custom heuristic simulates <strong>fruit fly scent tracking</strong>, applying a 15% discount for movement along prevailing west-to-east wind directions to speed up the search while staying optimal.</p>
+      </div>
+    </div>
+  </div>
+  <div id="drawerOverlay" class="drawer-overlay"></div>
+
 
   <footer>
     by Schizo Mapping
   </footer>
 
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
 
   <script src="js/data.js"></script>
   <script src="js/search.js"></script>
