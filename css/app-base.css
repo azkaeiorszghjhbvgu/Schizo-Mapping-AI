@@ -427,6 +427,13 @@ th {
 }
 
 
+.empty-row td {
+  color: var(--muted);
+
+  text-align: center;
+}
+
+
 .path-cell {
   font-family:
     ui-monospace,

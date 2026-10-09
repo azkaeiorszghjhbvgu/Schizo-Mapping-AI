@@ -24,6 +24,9 @@ let animationSpeed = 1;
 let animationToken = 0;
 let isRunning = false;
 
+const EMPTY_ROW =
+  '<tr class="empty-row"><td colspan="6">Results appear here once a search finishes.</td></tr>';
+
 
 // typed text can be anything, so map it to a real city name (any case) or undefined
 function findCity(input) {
@@ -45,7 +48,7 @@ function stopRun() {
   drawBaseMap(bfsSvg);
   drawBaseMap(astarSvg);
 
-  resultsBody.innerHTML = "";
+  resultsBody.innerHTML = EMPTY_ROW;
 
   playbackStatus.textContent = "Ready";
 }
@@ -74,6 +77,8 @@ function refreshCityLists() {
 }
 
 refreshCityLists();
+
+resultsBody.innerHTML = EMPTY_ROW;
 
 drawBaseMap(bfsSvg);
 drawBaseMap(astarSvg);
@@ -342,7 +347,7 @@ async function runComparison() {
     `Searching from ${start} to ${goal}...`;
 
   resultsBody.innerHTML =
-    "";
+    EMPTY_ROW;
 
   if (runBfs) {
     drawBaseMap(
@@ -414,6 +419,9 @@ async function runComparison() {
   ) {
     return;
   }
+
+  resultsBody.innerHTML =
+    "";
 
   if (runBfs) {
     renderRow(
