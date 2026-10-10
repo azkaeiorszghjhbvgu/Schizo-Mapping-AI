@@ -67,6 +67,7 @@ function createCityIcon(city, x, y) {
   const title = el("title");
   title.textContent = city;
 
+  icon.appendChild(title);
   icon.appendChild(inner);
 
   return icon;
