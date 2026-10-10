@@ -144,34 +144,6 @@ function setNodeState(
   }
 }
 
-function clearNodeStates(svg) {
-  svg
-    .querySelectorAll(".city-icon")
-    .forEach((node) => {
-      node.classList.remove(
-        "start",
-        "goal",
-        "visited",
-        "current",
-        "frontier",
-        "node-start",
-        "node-goal",
-        "node-visited",
-        "node-current",
-        "node-frontier"
-      );
-    });
-
-  svg
-    .querySelectorAll("line.edge")
-    .forEach((line) => {
-      line.classList.remove(
-        "edge-path"
-      );
-    });
-}
-
-
 function highlightPathEdges(
   svg,
   path
@@ -233,27 +205,6 @@ function highlightPathEdges(
           );
         }
       });
-  }
-}
-
-function highlightPathNodes(
-  svg,
-  path
-) {
-  if (!path) {
-    return;
-  }
-
-  for (const city of path) {
-    const node = svg.querySelector(
-      `.city-icon[data-city="${city}"]`
-    );
-
-    if (node) {
-      node.classList.add(
-        "path-node"
-      );
-    }
   }
 }
 

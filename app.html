@@ -56,7 +56,7 @@
       <select id="mode-select">
         <option value="" selected disabled hidden>Select algorithm</option>
         <option value="both">Both (compare)</option>
-        <option value="bfs">Uniform-Cost Search</option>
+        <option value="ucs">Uniform-Cost Search</option>
         <option value="astar">A* Search (Fruit Fly Scent)</option>
       </select>
     </label>
@@ -133,7 +133,7 @@
 
     <section
       class="map-panel"
-      id="bfs-panel"
+      id="ucs-panel"
     >
 
       <h2>
@@ -141,7 +141,7 @@
       </h2>
 
       <svg
-        id="bfs-map"
+        id="ucs-map"
         class="map"
         viewBox="0 0 600 430"
       ></svg>
@@ -194,15 +194,6 @@
   </section>
 
 
-  <div
-    id="cityTooltip"
-    class="city-tooltip"
-  >
-    <div class="tooltip-city"></div>
-    <div class="tooltip-g"></div>
-    <div class="tooltip-h"></div>
-    <div class="tooltip-f"></div>
-  </div>
 
   <div id="explanationDrawer" class="explanation-drawer">
     <div class="drawer-header">
@@ -236,7 +227,8 @@
 
 
   <footer>
-    by Schizo Mapping
+    by Schizo Mapping ·
+    <a href="https://github.com/azkaeiorszghjhbvgu/Schizo-Mapping-AI" target="_blank">GitHub ↗</a>
   </footer>
 
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"></script>

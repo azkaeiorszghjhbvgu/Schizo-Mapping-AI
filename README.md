@@ -10,7 +10,7 @@
 - **Due date**: 9 AM Tuesday, October 13, 2026.
 - **Things to turn in**:
   - Web App URL (must be deployed onto a host computer) — https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
-  - A link to the GitHub repository, provided within the web app — see footer of `index.html`
+  - A link to the GitHub repository, provided within the web app — see the GitHub link in the `index.html` nav bar and the `app.html` footer
   - Presentation clip link on YouTube (approx. 10–15 minutes) — _TODO: add video link here_
 
 ## Algorithms implemented

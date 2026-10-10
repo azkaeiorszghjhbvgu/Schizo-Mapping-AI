@@ -2,10 +2,10 @@ const startSelect = document.getElementById("start-city");
 const goalSelect = document.getElementById("goal-city");
 const modeSelect = document.getElementById("mode-select");
 
-const bfsSvg = document.getElementById("bfs-map");
+const ucsSvg = document.getElementById("ucs-map");
 const astarSvg = document.getElementById("astar-map");
 
-const bfsPanel = document.getElementById("bfs-panel");
+const ucsPanel = document.getElementById("ucs-panel");
 const astarPanel = document.getElementById("astar-panel");
 
 const resultsBody = document.getElementById("results-body");
@@ -45,7 +45,7 @@ function stopRun() {
   isPaused = false;
   isRunning = false;
 
-  drawBaseMap(bfsSvg);
+  drawBaseMap(ucsSvg);
   drawBaseMap(astarSvg);
 
   resultsBody.innerHTML = EMPTY_ROW;
@@ -80,7 +80,7 @@ refreshCityLists();
 
 resultsBody.innerHTML = EMPTY_ROW;
 
-drawBaseMap(bfsSvg);
+drawBaseMap(ucsSvg);
 drawBaseMap(astarSvg);
 
 
@@ -329,16 +329,16 @@ async function runComparison() {
   const mode =
     modeSelect.value;
 
-  const runBfs =
+  const runUcs =
     mode === "both" ||
-    mode === "bfs";
+    mode === "ucs";
 
   const runAstar =
     mode === "both" ||
     mode === "astar";
 
-  bfsPanel.hidden =
-    !runBfs;
+  ucsPanel.hidden =
+    !runUcs;
 
   astarPanel.hidden =
     !runAstar;
@@ -349,9 +349,9 @@ async function runComparison() {
   resultsBody.innerHTML =
     EMPTY_ROW;
 
-  if (runBfs) {
+  if (runUcs) {
     drawBaseMap(
-      bfsSvg
+      ucsSvg
     );
   }
 
@@ -361,8 +361,8 @@ async function runComparison() {
     );
   }
 
-  const bfsResult =
-    runBfs
+  const ucsResult =
+    runUcs
       ? runTimed(
           uniformCostSearch,
           start,
@@ -382,13 +382,13 @@ async function runComparison() {
   const animations =
     [];
 
-  if (runBfs) {
+  if (runUcs) {
     animations.push(
       animateExpansion(
-        bfsSvg,
-        bfsResult.expansionOrder,
-        bfsResult.path,
-        bfsResult.cameFrom,
+        ucsSvg,
+        ucsResult.expansionOrder,
+        ucsResult.path,
+        ucsResult.cameFrom,
         start,
         goal,
         token
@@ -423,10 +423,10 @@ async function runComparison() {
   resultsBody.innerHTML =
     "";
 
-  if (runBfs) {
+  if (runUcs) {
     renderRow(
       "Uniform-Cost Search (blind)",
-      bfsResult
+      ucsResult
     );
   }
 
@@ -440,9 +440,9 @@ async function runComparison() {
   const summaryParts =
     [];
 
-  if (runBfs) {
+  if (runUcs) {
     summaryParts.push(
-      `UCS expanded ${bfsResult.nodesExpanded} nodes`
+      `UCS expanded ${ucsResult.nodesExpanded} nodes`
     );
   }
 
@@ -509,7 +509,7 @@ resetBtn.addEventListener(
 
     refreshCityLists();
 
-    bfsPanel.hidden = false;
+    ucsPanel.hidden = false;
     astarPanel.hidden = false;
   }
 );
