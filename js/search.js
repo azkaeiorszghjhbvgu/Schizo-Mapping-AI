@@ -4,7 +4,7 @@
 //    Blind / uninformed search, expands the lowest path cost first.
 //
 // 2) A* Search
-//    Informed search, uses straight-line distance as a heuristic.
+//    Informed search, uses the Fruit Fly Scent heuristic (wind-discounted straight-line distance).
 
 function reconstructPath(cameFrom, goal) {
   const path = [goal];
@@ -105,11 +105,6 @@ function uniformCostSearch(start, goal) {
         expansionOrder,
         nodesExpanded,
         maxFrontierSize,
-
-        visitedCount:
-          closed.size +
-          frontier.length,
-
         t0,
       });
     }
@@ -151,7 +146,6 @@ function uniformCostSearch(start, goal) {
     expansionOrder,
     nodesExpanded,
     maxFrontierSize,
-    visitedCount: closed.size,
     t0
   });
 }
@@ -237,11 +231,6 @@ function aStarSearch(start, goal) {
         expansionOrder,
         nodesExpanded,
         maxFrontierSize,
-
-        visitedCount:
-          closed.size +
-          frontier.length,
-
         t0,
       });
     }
@@ -292,7 +281,6 @@ function aStarSearch(start, goal) {
     expansionOrder,
     nodesExpanded,
     maxFrontierSize,
-    visitedCount: closed.size,
     t0
   });
 }
@@ -304,7 +292,6 @@ function finishResult({
   expansionOrder,
   nodesExpanded,
   maxFrontierSize,
-  visitedCount,
   t0
 }) {
   const runtimeMs =
@@ -324,7 +311,6 @@ function finishResult({
     expansionOrder,
     nodesExpanded,
     maxFrontierSize,
-    visitedCount,
-    runtimeMs,
+      runtimeMs,
   };
 }
