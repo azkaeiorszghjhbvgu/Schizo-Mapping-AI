@@ -15,10 +15,13 @@
         btn.classList.toggle("active", btn.dataset.themeChoice === theme);
       });
     }
-    localStorage.setItem(THEME_KEY, theme);
+    // storage can throw when blocked (private mode, disabled cookies); the theme just won't persist
+    try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
   }
 
-  applyTheme(localStorage.getItem(THEME_KEY) || "dark");
+  var savedTheme = null;
+  try { savedTheme = localStorage.getItem(THEME_KEY); } catch (e) {}
+  applyTheme(savedTheme || "dark");
 
   if (settings) {
     var gear = settings.querySelector(".navbar-gear");
