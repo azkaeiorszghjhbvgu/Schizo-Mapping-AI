@@ -86,6 +86,7 @@
     ];
 
     let currentImage = 0;
+    let autoPlayTimer = null;
 
 
     function changeImage(direction) {
@@ -99,7 +100,47 @@
 
       const track = document.getElementById("imageTrack");
       track.style.transform = `translateX(-${currentImage * 100}%)`;
+
+      resetTimer();
     }
+
+    function resetTimer() {
+      clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(() => {
+        changeImage(1);
+      }, 3000);
+    }
+
+    resetTimer();
+    
+    window.addEventListener("pageshow", (event) => {
+      if (event.persisted) {
+        document.body.style.animation = "none";
+        document.body.classList.remove("fade-out");
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const ctaButton = document.querySelector(".cta");
+
+      if (ctaButton) {
+        ctaButton.addEventListener("click", (e) => {
+          e.preventDefault();
+          const targetUrl = ctaButton.getAttribute("href");
+
+          document.body.style.animation = "none";
+
+          void document.body.offsetHeight;
+          
+          document.body.classList.add("fade-out");
+
+          setTimeout(() => {
+            window.location.href = targetUrl;
+          }, 400);
+        });
+      }
+    });
+
   </script>
 
 </body>

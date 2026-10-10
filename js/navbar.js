@@ -39,4 +39,30 @@
   if (explainBtn) explainBtn.addEventListener("click", toggleDrawer);
   if (closeDrawerBtn) closeDrawerBtn.addEventListener("click", toggleDrawer);
   if (drawerOverlay) drawerOverlay.addEventListener("click", toggleDrawer);
+
+  var homeLink = document.querySelector(".navbar-home");
+
+  if (homeLink) {
+    homeLink.error = null;
+    homeLink.addEventListener("click", function (e) {
+      e.preventDefault();
+      var targetUrl = homeLink.getAttribute("href");
+
+      document.body.style.animation = "none";
+
+      void document.body.offsetHeight;
+      
+      document.body.classList.add("fade-out");
+
+      setTimeout(function () {
+        window.location.href = targetUrl;
+      }, 400);
+    });
+  }
+
+  window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+      document.body.classList.remove("fade-out");
+    }
+  });
 })();
