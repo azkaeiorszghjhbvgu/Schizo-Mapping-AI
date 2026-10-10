@@ -32,6 +32,9 @@ python -m http.server 8080
 
 then visit http://localhost:8080.
 
+## Troubleshooting
+- **Page Transition Glitches**: if the smooth fade transitions don't appear for you, perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`) to clear cached static assets.
+
 ## Notes
 
 Web now changed to https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
