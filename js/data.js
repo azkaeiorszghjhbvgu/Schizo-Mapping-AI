@@ -111,7 +111,7 @@ function straightLineHeuristic(a, b) {
 // Fruit Fly Scent Heuristic:
 // Combines distance, wind direction, and scent decay to estimate path cost
 // Simplified weather model for Romania map using prevailing west-to-east wind
-// Give 15% discount (0.85x) to right to left search to simulate downwind scent carrying
+// Applies a 15% scent discoutn when moving downwind (west -> east)
 function fruitFlyWindScentHeuristic(city, goal) {
   const baseDist = straightLineHeuristic(city, goal);
   if (baseDist === 0) return 0;

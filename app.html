@@ -222,7 +222,13 @@
       <div class="explanation-section">
         <h3>02 / A* Search (Fruit Fly Scent)</h3>
         <p><strong>Type:</strong> Heuristic Search (Bio-Inspired)</p>
-        <p>A* guides the search using a smart estimate ($f(n) = g(n) + h(n)$). Our custom heuristic simulates <strong>fruit fly scent tracking</strong>, applying a 15% discount for movement along prevailing west-to-east wind directions to speed up the search while staying optimal.</p>
+        <p>
+          A* guides the search using an estimate, $f(n) = g(n) + h(n)$. Our custom heuristic simulates 
+          <strong>fruit fly scent tracking</strong>: the scent estimate is straight-line distance, discounted 15% 
+          when the goal lies downwind (west → east). The discount only lowers the estimate, so it never overestimates 
+          and A* stays optimal. The trade-off is a slightly weaker guide: across all 380 city pairs, 
+          Fruit Fly A* expands 2,759 nodes vs 2,647 for plain straight-line A*, still 34% fewer than UCS (4,180).
+        </p>
       </div>
     </div>
   </div>
