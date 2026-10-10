@@ -159,7 +159,7 @@ body::after {
 
   display: grid;
 
-  grid-template-columns: 44% 56%;
+  grid-template-columns: minmax(0, 44fr) minmax(0, 56fr);
 
   align-items: center;
 
@@ -342,7 +342,7 @@ h1 span {
 @media (max-width: 1000px) {
 
   .hero {
-    grid-template-columns: 46% 54%;
+    grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
 
     gap: 30px;
   }

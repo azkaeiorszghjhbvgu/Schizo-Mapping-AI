@@ -55,8 +55,7 @@ body::before {
     linear-gradient(
       rgba(11, 12, 13, 0.83),
       rgba(11, 12, 13, 0.83)
-    ),
-    url("../assets/paper-texture.jpg");
+    );
 
   background-size: cover;
 
@@ -86,6 +85,8 @@ body::before {
 
   border-bottom:
     1px solid rgba(255, 255, 255, 0.07);
+
+  -webkit-backdrop-filter: blur(8px);
 
   backdrop-filter: blur(8px);
 
@@ -139,6 +140,7 @@ body::before {
   width: 420px;
   max-width: 90vw;
   height: 100vh;
+  height: 100dvh;
   background: #0f1012;
   border-left: 1px solid var(--border);
   box-shadow: -10px 0 35px rgba(0, 0, 0, 0.5);
@@ -222,6 +224,8 @@ body::before {
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
+  -webkit-backdrop-filter: blur(2px);
+
   backdrop-filter: blur(2px);
   z-index: 999;
   opacity: 0;
@@ -580,6 +584,14 @@ footer a {
 @media (max-width: 768px) {
 
   body {
+    padding-inline: 14px;
+  }
+
+  .navbar {
+    width: calc(100% + 28px);
+
+    margin-inline: -14px;
+
     padding-inline: 14px;
   }
 
