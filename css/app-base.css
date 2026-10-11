@@ -705,6 +705,12 @@ footer a {
 }
 
 
+/* boxes with overflow can shrink to nothing in a capped column; let the dock scroll instead */
+.map-panel.is-fullscreen .fs-dock > * {
+  flex-shrink: 0;
+}
+
+
 .map-panel.is-fullscreen .results {
   max-width: none;
 
@@ -715,6 +721,24 @@ footer a {
   font-size: 0.75rem;
 
   background: var(--bg);
+}
+
+
+.map-panel.is-fullscreen .results table {
+  font-size: 0.72rem;
+}
+
+
+.map-panel.is-fullscreen .results th,
+.map-panel.is-fullscreen .results td {
+  padding: 5px 4px;
+}
+
+
+/* the pair count matters least, and the Fruit Fly column must fit in 300px */
+.map-panel.is-fullscreen .evidence th:nth-child(2),
+.map-panel.is-fullscreen .evidence td:nth-child(2) {
+  display: none;
 }
 
 
@@ -822,3 +846,9 @@ body.has-fullscreen {
 
   transform: rotate(90deg);
 }
+
+
+.evidence {
+  margin-top: 24px;
+}
+

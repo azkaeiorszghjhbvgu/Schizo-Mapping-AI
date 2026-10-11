@@ -151,7 +151,8 @@ function uniformCostSearch(start, goal) {
 }
 
 // A* Search using the Fruit Fly Scent Heuristic
-function aStarSearch(start, goal) {
+// h is swappable so the evidence panel can run a plain straight-line baseline
+function aStarSearch(start, goal, h = fruitFlyWindScentHeuristic) {
   const t0 = performance.now();
 
 
@@ -161,7 +162,7 @@ function aStarSearch(start, goal) {
     {
       node: start,
       g: 0,
-      f: fruitFlyWindScentHeuristic(
+      f: h(
         start,
         goal
       )
@@ -264,7 +265,7 @@ function aStarSearch(start, goal) {
           g: tentativeG,
           f:
             tentativeG +
-            fruitFlyWindScentHeuristic(
+            h(
               to,
               goal
             )

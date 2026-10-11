@@ -542,6 +542,8 @@ resetBtn.addEventListener(
     // full screen keeps its locked algorithm through a reset
     if (lockOpt.isConnected) lockOpt.selected = true;
 
+    syncEvidence();
+
     refreshCityLists();
 
     ucsPanel.hidden = false;
@@ -595,6 +597,15 @@ modeSelect.addEventListener(
   runComparison
 );
 
+// the evidence is about the A* heuristic, so only show it when A* is picked
+const evidenceEl = document.querySelector(".evidence");
+
+function syncEvidence() {
+  evidenceEl.hidden = !["astar", "both"].includes(modeSelect.value);
+}
+
+modeSelect.addEventListener("change", syncEvidence);
+
 document.getElementById("swapBtn").addEventListener("click", () => {
   const start = startSelect.value;
   const goal = goalSelect.value;
@@ -616,7 +627,8 @@ document.getElementById("swapBtn").addEventListener("click", () => {
 const controlsEl = document.querySelector(".controls");
 const controlsHome = controlsEl.nextElementSibling;
 const resultsEl = document.querySelector(".results");
-const resultsHome = resultsEl.nextElementSibling;
+// anchor after the evidence box: both boxes leave together, so neither can be the other's anchor
+const resultsHome = evidenceEl.nextElementSibling;
 // one column so the comparison table stacks under the controls box
 const fsDock = document.createElement("div");
 fsDock.className = "fs-dock";
@@ -634,12 +646,13 @@ function exitFullscreen() {
   open.classList.remove("is-fullscreen");
   document.body.classList.remove("has-fullscreen");
   controlsHome.before(controlsEl);
-  resultsHome.before(resultsEl);
+  resultsHome.before(resultsEl, evidenceEl);
   fsDock.remove();
   lockOpt.remove();
   modeSelect.value = modeBeforeFullscreen;
   modeSelect.disabled = false;
   modeSelect.parentElement.title = "";
+  syncEvidence();
   rerunIfReady();
 }
 
@@ -651,7 +664,7 @@ document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
     if (wasOpen) return;
     panel.classList.add("is-fullscreen");
     document.body.classList.add("has-fullscreen");
-    fsDock.append(controlsEl, resultsEl);
+    fsDock.append(controlsEl, resultsEl, evidenceEl);
     panel.append(fsDock);
     modeBeforeFullscreen = modeSelect.value;
     lockOpt.value = panel === ucsPanel ? "ucs" : "astar";
@@ -661,6 +674,8 @@ document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
     // on the wrapping label: hover on a disabled select is unreliable across browsers
     modeSelect.parentElement.title =
       `Currently on ${modeSelect.querySelector(`option[value="${lockOpt.value}"]`).text}`;
+    // locked mode is "ucs" or "astar", so the evidence shows only on the A* map
+    syncEvidence();
     rerunIfReady();
   });
 });

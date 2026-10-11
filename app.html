@@ -202,6 +202,35 @@
   </section>
 
 
+  <section class="results evidence" hidden>
+
+    <h2>A* Evidence (all 380 city pairs)</h2>
+
+    <table>
+
+      <thead>
+        <tr>
+          <th>Pairs</th>
+          <th>Count</th>
+          <th>Avg nodes: UCS</th>
+          <th>Avg nodes: straight-line A*</th>
+          <th>Avg nodes: Fruit Fly A*</th>
+        </tr>
+      </thead>
+
+      <tbody id="evidence-body">
+      </tbody>
+
+    </table>
+
+    <p class="status">
+      In the plume the fly is guided almost as well as straight-line A*; outside it the fly is
+      nearly blind and searches like UCS. The wind decides which, not the roads.
+    </p>
+
+  </section>
+
+
 
   <div id="explanationDrawer" class="explanation-drawer">
     <div class="drawer-header">
@@ -255,6 +284,7 @@
 
   <script src="js/data.js"></script>
   <script src="js/search.js"></script>
+  <script src="js/evidence.js"></script>
   <script src="js/map.js"></script>
   <script src="js/navbar.js"></script>
   <script src="js/app.js"></script>
