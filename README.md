@@ -23,5 +23,5 @@
 
 ## Run
 
-  -Just open `index.html` directly (local)
-  -Web https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
+  - Just open `index.html` directly (local)
+  - Web https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
