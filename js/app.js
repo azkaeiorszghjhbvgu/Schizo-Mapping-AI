@@ -28,9 +28,13 @@ const EMPTY_ROW =
   '<tr class="empty-row"><td colspan="6">Results appear here once a search finishes.</td></tr>';
 
 
-// selected city name, or undefined while the placeholder is showing
-function findCity(select) {
-  return select.value || undefined;
+// typed text can be anything, so map it to a real city name (any case) or undefined
+function findCity(input) {
+  const typed = input.value.trim().toLowerCase();
+
+  return CITY_NAMES.find(
+    (city) => city.toLowerCase() === typed
+  );
 }
 
 
@@ -50,34 +54,131 @@ function stopRun() {
 }
 
 
-// each box's list leaves out the city chosen in the other box
-// a <select>, not a <datalist>: iOS Safari shows no dropdown for datalists
-function fillCityList(select, excludeCity) {
-  const current = select.value;
+// Our own dropdown instead of <datalist>: iOS Safari shows no list for datalists.
+// Shows cities containing the typed letters, minus the city chosen in the other box.
+function setupCityCombo(input, otherInput) {
+  const list = document.getElementById(
+    input.getAttribute("aria-controls")
+  );
 
-  select.innerHTML =
-    '<option value="" selected disabled hidden>Select city</option>';
+  let matches = [];
+  let active = -1;
 
-  for (const city of CITY_NAMES) {
-    if (city === excludeCity) {
-      continue;
+  function close() {
+    list.hidden = true;
+    input.setAttribute("aria-expanded", "false");
+    input.removeAttribute("aria-activedescendant");
+    active = -1;
+  }
+
+  function render() {
+    const typed = input.value.trim().toLowerCase();
+    const exclude = findCity(otherInput);
+
+    // an exact match still lists everything, so the box works as a plain picker too
+    matches = CITY_NAMES.filter(
+      (city) =>
+        city !== exclude &&
+        (findCity(input) || city.toLowerCase().includes(typed))
+    );
+
+    active = -1;
+    list.innerHTML = "";
+
+    matches.forEach((city, i) => {
+      const li = document.createElement("li");
+
+      li.id = `${list.id}-${i}`;
+      li.textContent = city;
+      li.setAttribute("role", "option");
+      li.setAttribute("aria-selected", "false");
+
+      list.appendChild(li);
+    });
+
+    list.hidden = matches.length === 0;
+    input.setAttribute("aria-expanded", String(!list.hidden));
+  }
+
+  function highlight(i) {
+    if (active >= 0) {
+      list.children[active].setAttribute("aria-selected", "false");
     }
 
-    select.add(new Option(city, city));
+    active = i;
+
+    const li = list.children[active];
+
+    li.setAttribute("aria-selected", "true");
+    li.scrollIntoView({ block: "nearest" });
+    input.setAttribute("aria-activedescendant", li.id);
   }
 
-  // rebuilding the options drops the selection, so put it back
-  if (current && current !== excludeCity) {
-    select.value = current;
+  function pick(city) {
+    input.value = city;
+    close();
+    runComparison();
   }
+
+  input.addEventListener("focus", render);
+  input.addEventListener("click", render);
+  input.addEventListener("blur", close);
+
+  input.addEventListener("input", () => {
+    render();
+
+    if (findCity(input)) {
+      runComparison();
+    } else {
+      // half-typed name: clear quietly instead of flashing the "select a city" error
+      stopRun();
+      statusEl.textContent = "";
+    }
+  });
+
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+
+      if (list.hidden) {
+        render();
+      }
+
+      if (matches.length) {
+        const step = e.key === "ArrowDown" ? 1 : -1;
+
+        highlight((active + step + matches.length) % matches.length);
+      }
+    } else if (e.key === "Enter" && !list.hidden && matches.length) {
+      e.preventDefault();
+      pick(
+        active >= 0
+          ? matches[active]
+          : findCity(input) || matches[0]
+      );
+    } else if (e.key === "Escape") {
+      close();
+    }
+  });
+
+  // mousedown, not click: keeps focus in the input so blur doesn't close the list first.
+  // Taps on phones fire it too, but not when the finger scrolls the list.
+  list.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+
+    const li = e.target.closest("li");
+
+    if (li) {
+      pick(li.textContent);
+    }
+  });
+
+  // the list sits inside a <label>, whose click would refocus the input and reopen it
+  list.addEventListener("click", (e) => e.preventDefault());
 }
 
-function refreshCityLists() {
-  fillCityList(startSelect, findCity(goalSelect));
-  fillCityList(goalSelect, findCity(startSelect));
-}
-
-refreshCityLists();
+setupCityCombo(startSelect, goalSelect);
+setupCityCombo(goalSelect, startSelect);
 
 resultsBody.innerHTML = EMPTY_ROW;
 
@@ -304,6 +405,16 @@ async function runComparison() {
     return;
   }
 
+  // the lists hide this, but the same name can still be typed into both boxes
+  if (start === goal) {
+    stopRun();
+
+    statusEl.textContent =
+      "Start and goal must be different cities.";
+
+    return;
+  }
+
   animationToken++;
 
   const token =
@@ -501,8 +612,6 @@ resetBtn.addEventListener(
     goalSelect.value = "";
     modeSelect.value = "";
 
-    refreshCityLists();
-
     ucsPanel.hidden = false;
     astarPanel.hidden = false;
   }
@@ -521,23 +630,6 @@ speedSelect.addEventListener(
 );
 
 
-startSelect.addEventListener(
-  "change",
-  () => {
-    fillCityList(goalSelect, findCity(startSelect));
-
-    runComparison();
-  }
-);
-
-goalSelect.addEventListener(
-  "change",
-  () => {
-    fillCityList(startSelect, findCity(goalSelect));
-
-    runComparison();
-  }
-);
 
 modeSelect.addEventListener(
   "change",

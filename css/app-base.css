@@ -396,6 +396,51 @@ option {
 }
 
 
+.combo {
+  position: relative;
+}
+
+.combo input {
+  width: 100%;
+
+  box-sizing: border-box;
+}
+
+.combo-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 20;
+
+  max-height: 240px;
+  overflow-y: auto;
+
+  margin: 2px 0 0;
+  padding: 0;
+  list-style: none;
+
+  background: var(--bg);
+
+  border: 1px solid var(--border);
+  border-radius: 2px;
+}
+
+.combo-list li {
+  padding: 9px 10px;
+
+  color: var(--text);
+  font-size: 0.95rem;
+
+  cursor: pointer;
+}
+
+.combo-list li:hover,
+.combo-list li[aria-selected="true"] {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+
 button {
   padding: 8px 16px;
 

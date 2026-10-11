@@ -39,12 +39,18 @@
 
     <label>
       Start city
-      <select id="start-city"></select>
+      <span class="combo">
+        <input type="text" id="start-city" placeholder="Select City" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="start-options" />
+        <ul id="start-options" class="combo-list" role="listbox" hidden></ul>
+      </span>
     </label>
 
     <label>
       Goal city
-      <select id="goal-city"></select>
+      <span class="combo">
+        <input type="text" id="goal-city" placeholder="Select City" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="goal-options" />
+        <ul id="goal-options" class="combo-list" role="listbox" hidden></ul>
+      </span>
     </label>
 
     <label>
