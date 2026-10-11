@@ -2,7 +2,6 @@
 
 ## Assignment Brief
 
-- **Problem**: The Romania-Map Pathfinding problem.
   - Implement 1 blind search and 1 custom heuristic search.
   - Any arbitrary cities can be selected as the start and goal states.
   - Compare the runtime, space, and path cost between the blind and heuristic searches.
