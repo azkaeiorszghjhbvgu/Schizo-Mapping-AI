@@ -2,18 +2,6 @@
 
 - **Web:** https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
 
-## Assignment Brief
-
-- Implement 1 blind search and 1 custom heuristic search.
-- Any city can be selected as the start and goal state.
-- Compare runtime, space, and path cost between the blind and heuristic searches.
-- **Grading criteria:** Creativity, Completeness, and Presentation.
-- **Due:** 9 AM Tuesday, October 13, 2026.
-- **Deliverables:**
-  - Web app URL (above)
-  - GitHub repository link inside the web app (nav bar on `index.html`, footer on `app.html`)
-  - Presentation clip on YouTube, approx. 10–15 minutes (above)
-
 ## Algorithms
 
 | | Blind search | Heuristic search |
