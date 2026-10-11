@@ -23,13 +23,8 @@
 
 ## Run locally
 
-Open `index.html` directly in a browser, or serve the folder with any static server, e.g.:
+Just open `index.html` directly
 
-```
-python -m http.server 8080
-```
-
-then visit http://localhost:8080.
 
 ## Troubleshooting
 - **Page Transition Glitches**: if the smooth fade transitions don't appear for you, perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`) to clear cached static assets.
