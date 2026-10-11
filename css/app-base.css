@@ -669,6 +669,9 @@ footer a {
   border-radius: 0;
 
   background: var(--bg);
+
+  /* reserve the sidebar column so the dock never covers the map */
+  padding-left: calc(16px + 300px + 16px);
 }
 
 
@@ -679,7 +682,7 @@ footer a {
 }
 
 
-.map-panel.is-fullscreen .controls {
+.map-panel.is-fullscreen .fs-dock {
   position: absolute;
 
   top: 50px;
@@ -688,11 +691,46 @@ footer a {
 
   z-index: 1;
 
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 12px;
+
+  width: 300px;
+
+  max-height: calc(100% - 66px);
+
+  overflow-y: auto;
+}
+
+
+.map-panel.is-fullscreen .results {
+  max-width: none;
+
+  margin: 0;
+
+  padding: 12px 14px;
+
+  font-size: 0.75rem;
+
+  background: var(--bg);
+}
+
+
+.map-panel.is-fullscreen .results h2 {
+  margin-bottom: 8px;
+
+  font-size: 1.05rem;
+}
+
+
+.map-panel.is-fullscreen .controls {
   flex-direction: column;
 
   align-items: stretch;
 
-  max-width: 260px;
+  max-width: none;
 
   margin: 0;
 
@@ -718,12 +756,34 @@ body.has-fullscreen {
 @media (max-width: 768px) {
 
   .map-panel.is-fullscreen {
+    padding-left: 16px;
+
     padding-bottom: env(safe-area-inset-bottom);
   }
 
-  .map-panel.is-fullscreen .controls {
+  .map-panel.is-fullscreen .fs-dock {
     position: static;
 
+    flex: none;
+
+    width: auto;
+
+    max-height: 50%;
+
+    gap: 0;
+
+    border-top: 1px solid var(--border);
+  }
+
+  .map-panel.is-fullscreen .results {
+    max-width: none;
+
+    border-width: 1px 0 0;
+
+    border-radius: 0;
+  }
+
+  .map-panel.is-fullscreen .controls {
     flex-direction: row;
 
     align-items: flex-end;
@@ -734,7 +794,11 @@ body.has-fullscreen {
 
     padding: 10px 12px;
 
-    border-top: 1px solid var(--border);
+    border: 0;
+
+    border-radius: 0;
+
+    box-shadow: none;
   }
 
 }

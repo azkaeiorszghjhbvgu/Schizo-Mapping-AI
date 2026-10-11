@@ -594,6 +594,11 @@ modeSelect.addEventListener(
 // Full-screen map: borrow the real controls section so all existing listeners keep working.
 const controlsEl = document.querySelector(".controls");
 const controlsHome = controlsEl.nextElementSibling;
+const resultsEl = document.querySelector(".results");
+const resultsHome = resultsEl.nextElementSibling;
+// one column so the comparison table stacks under the controls box
+const fsDock = document.createElement("div");
+fsDock.className = "fs-dock";
 // shares the panel's mode value so runComparison reads it like a normal choice
 const lockOpt = new Option("Exit Fullscreen to Select");
 let modeBeforeFullscreen = "";
@@ -608,6 +613,8 @@ function exitFullscreen() {
   open.classList.remove("is-fullscreen");
   document.body.classList.remove("has-fullscreen");
   controlsHome.before(controlsEl);
+  resultsHome.before(resultsEl);
+  fsDock.remove();
   lockOpt.remove();
   modeSelect.value = modeBeforeFullscreen;
   modeSelect.disabled = false;
@@ -623,7 +630,8 @@ document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
     if (wasOpen) return;
     panel.classList.add("is-fullscreen");
     document.body.classList.add("has-fullscreen");
-    panel.append(controlsEl);
+    fsDock.append(controlsEl, resultsEl);
+    panel.append(fsDock);
     modeBeforeFullscreen = modeSelect.value;
     lockOpt.value = panel === ucsPanel ? "ucs" : "astar";
     modeSelect.append(lockOpt);
