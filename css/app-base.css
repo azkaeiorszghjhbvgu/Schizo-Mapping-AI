@@ -802,3 +802,23 @@ body.has-fullscreen {
   }
 
 }
+
+
+.swap-btn {
+  align-self: flex-end;
+
+  padding: 6px 10px;
+}
+
+
+/* controls stack vertically in full screen, so point the arrows up/down */
+.map-panel.is-fullscreen .swap-btn {
+  align-self: center;
+}
+
+
+.map-panel.is-fullscreen .swap-btn span {
+  display: inline-block;
+
+  transform: rotate(90deg);
+}

@@ -42,6 +42,10 @@
       <input type="search" id="start-city" list="start-list" placeholder="Select City" autocomplete="off" />
     </label>
 
+    <button id="swapBtn" type="button" class="secondary swap-btn" aria-label="Swap start and goal cities" title="Swap start and goal">
+      <span>⇄</span>
+    </button>
+
     <label>
       Goal city
       <input type="search" id="goal-city" list="goal-list" placeholder="Select City" autocomplete="off" />
@@ -219,10 +223,15 @@
         <p><strong>Type:</strong> Heuristic Search (Bio-Inspired)</p>
         <p>
           A* guides the search using an estimate, $f(n) = g(n) + h(n)$. Our custom heuristic simulates 
-          <strong>fruit fly scent tracking</strong>: the scent estimate is straight-line distance, discounted 15% 
-          when the goal lies downwind (west → east). The discount only lowers the estimate, so it never overestimates 
-          and A* stays optimal. The trade-off is a slightly weaker guide: across all 380 city pairs, 
-          Fruit Fly A* expands 2,759 nodes vs 2,647 for plain straight-line A*, still 34% fewer than UCS (4,180).
+          <strong>fruit fly scent tracking</strong>. A fly finds food by sensing the odor plume the wind carries 
+          away from it. With a west → east wind, the scent strength at a city is $e^{-(r - x)/L}$ (from the 
+          advection-diffusion equation: $r$ = distance to the goal, $x$ = distance downwind of it, $L$ = 300 km). 
+          It is 1 straight downwind and fades off to the sides and upwind. The heuristic is 
+          $h(n)$ = straight-line distance × scent strength, so a fly in the plume is fully guided and one upwind 
+          is nearly blind, like UCS. Strength never exceeds 1, so $h$ never overestimates and A* stays optimal 
+          (checked on all 380 city pairs: admissible, consistent, always the shortest path). Across those pairs, 
+          Fruit Fly A* expands 3,308 nodes: 21% fewer than UCS (4,180), but more than plain straight-line A* 
+          (2,647), which has no wind and so is never blind.
         </p>
       </div>
     </div>

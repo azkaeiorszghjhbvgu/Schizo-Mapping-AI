@@ -111,21 +111,39 @@ function straightLineHeuristic(a, b) {
 }
 
 // Fruit Fly Scent Heuristic:
-// Combines straight-line distance and wind direction to estimate path cost
-// Simplified weather model for Romania map using prevailing west-to-east wind
-// Applies a 15% scent discount when moving downwind (west -> east)
-function fruitFlyWindScentHeuristic(city, goal) {
-  const baseDist = straightLineHeuristic(city, goal);
-  if (baseDist === 0) return 0;
+// A fly finds food by sensing the odor plume the wind carries away from it. For a point
+// source in a steady wind, the advection-diffusion equation gives a concentration of
+// c ~ exp(-(r - x) / L) / r, where r = distance to the source, x = distance downwind of it,
+// and L = 2D/U (diffusion over wind speed). We keep the exp(...) part as a 0..1 scent
+// strength: 1 anywhere straight downwind, fading off to the sides and upwind.
+// h = straight-line distance * scent strength. A strong scent gives full guidance;
+// no scent leaves the fly blind (h -> 0, like UCS).
+// Because strength <= 1, h never exceeds straight-line distance, so it stays admissible.
+// Checked on all 380 city pairs: admissible, consistent on every edge, always optimal.
+const WIND_DIRECTION = [1, 0]; // prevailing wind blows west -> east (+x)
+const SCENT_DIFFUSION_KM = 300; // L: larger = scent spreads further sideways/upwind
 
-  const [cx, cy] = CITY_COORDS[city];
+// any map point (x, y), so the plume can also be drawn between cities
+function scentStrengthAt(x, y, goal) {
   const [gx, gy] = CITY_COORDS[goal];
 
-  const dx = gx - cx;
+  const r = Math.hypot(x - gx, y - gy) * PIXEL_TO_KM_SCALE;
+  if (r === 0) return 1;
 
-  const windDiscount = dx > 0 ? 0.85 : 1.0; 
+  // how far the fly sits downwind of the food
+  const downwind =
+    ((x - gx) * WIND_DIRECTION[0] + (y - gy) * WIND_DIRECTION[1]) *
+    PIXEL_TO_KM_SCALE;
 
-  return baseDist * windDiscount;
+  return Math.exp(-(r - downwind) / SCENT_DIFFUSION_KM);
+}
+
+function scentStrength(city, goal) {
+  return scentStrengthAt(...CITY_COORDS[city], goal);
+}
+
+function fruitFlyWindScentHeuristic(city, goal) {
+  return straightLineHeuristic(city, goal) * scentStrength(city, goal);
 }
 
 

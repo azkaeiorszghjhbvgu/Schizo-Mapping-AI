@@ -286,3 +286,75 @@ function animateExplorationEdge(
 
   edge.style.animation = "";
 }
+
+// Fruit fly scent plume for the A* map: samples the real heuristic's scentStrengthAt()
+// on a grid, so the cloud is the formula itself, not a hand-drawn shape.
+const SCENT_CELL = 12;
+
+function drawScentField(svg, goal) {
+  const [vx, vy, vw, vh] =
+    svg.getAttribute("viewBox").split(" ").map(Number);
+
+  const filterId = `${svg.id}-scent-blur`;
+
+  const defs = el("defs");
+  const filter = el("filter", { id: filterId });
+  filter.appendChild(el("feGaussianBlur", { stdDeviation: SCENT_CELL * 0.6 }));
+  defs.appendChild(filter);
+
+  // .map has overflow: visible, so clip the cloud to the view or it spills over the panel
+  const clipId = `${svg.id}-scent-clip`;
+  const clip = el("clipPath", { id: clipId });
+  clip.appendChild(el("rect", { x: vx, y: vy, width: vw, height: vh }));
+  defs.appendChild(clip);
+
+  const field = el("g", { class: "scent-field", filter: `url(#${filterId})` });
+
+  // overshoot the view so the blur doesn't fade the map edges
+  const pad = SCENT_CELL * 3;
+
+  for (let x = vx - pad; x < vx + vw + pad; x += SCENT_CELL) {
+    for (let y = vy - pad; y < vy + vh + pad; y += SCENT_CELL) {
+      const s = scentStrengthAt(x + SCENT_CELL / 2, y + SCENT_CELL / 2, goal);
+
+      // skip invisible cells to keep the DOM small
+      if (s < 0.03) continue;
+
+      field.appendChild(
+        el("rect", {
+          x,
+          y,
+          width: SCENT_CELL,
+          height: SCENT_CELL,
+          // squared only for contrast; exact values are in each city's tooltip
+          "fill-opacity": (s * s * 0.3).toFixed(3),
+        })
+      );
+    }
+  }
+
+  const clipped = el("g", { "clip-path": `url(#${clipId})` });
+  clipped.appendChild(field);
+
+  // under the roads and cities
+  svg.prepend(defs, clipped);
+
+  const wind = el("g", {
+    class: "wind-indicator",
+    transform: `translate(${vx + 12}, ${vy + 16})`,
+  });
+  wind.appendChild(el("line", { x1: 0, y1: 0, x2: 34, y2: 0 }));
+  wind.appendChild(el("path", { d: "M34 -4 L42 0 L34 4 Z" }));
+  const label = el("text", { x: 0, y: 14 });
+  label.textContent = "wind / scent plume";
+  wind.appendChild(label);
+  svg.appendChild(wind);
+
+  for (const city of CITY_NAMES) {
+    const title = svg.querySelector(`.city-icon[data-city="${city}"] title`);
+    if (title) {
+      title.textContent =
+        `${city}: scent ${scentStrength(city, goal).toFixed(2)}`;
+    }
+  }
+}

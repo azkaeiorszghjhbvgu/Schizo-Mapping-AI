@@ -383,6 +383,11 @@ async function runComparison() {
     drawBaseMap(
       astarSvg
     );
+
+    drawScentField(
+      astarSvg,
+      goal
+    );
   }
 
   const ucsResult =
@@ -589,6 +594,22 @@ modeSelect.addEventListener(
   "change",
   runComparison
 );
+
+document.getElementById("swapBtn").addEventListener("click", () => {
+  const start = startSelect.value;
+  const goal = goalSelect.value;
+
+  // touch <select>s each exclude the other's city, so clear both and refill before swapping
+  startSelect.value = "";
+  goalSelect.value = "";
+  refreshCityLists();
+
+  startSelect.value = goal;
+  goalSelect.value = start;
+  refreshCityLists();
+
+  rerunIfReady();
+});
 
 
 // Full-screen map: borrow the real controls section so all existing listeners keep working.
