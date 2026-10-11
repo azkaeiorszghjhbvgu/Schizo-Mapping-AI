@@ -712,3 +712,29 @@ footer a {
 body.has-fullscreen {
   overflow: hidden;
 }
+
+
+/* phones: a floating panel covers most of a portrait map, so dock the controls below it */
+@media (max-width: 768px) {
+
+  .map-panel.is-fullscreen {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .map-panel.is-fullscreen .controls {
+    position: static;
+
+    flex-direction: row;
+
+    align-items: flex-end;
+
+    gap: 8px 12px;
+
+    max-width: none;
+
+    padding: 10px 12px;
+
+    border-top: 1px solid var(--border);
+  }
+
+}
