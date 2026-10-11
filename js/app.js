@@ -467,7 +467,10 @@ async function runComparison() {
 playBtn.addEventListener(
   "click",
   () => {
+    // nothing running: start (or replay) the search
     if (!isRunning) {
+      runComparison();
+
       return;
     }
 
@@ -529,22 +532,29 @@ speedSelect.addEventListener(
 
 // "input" also fires when a city is picked from the datalist
 // only refill the other box's list, so the open list under the cursor doesn't flicker
+function onCityInput(input, other) {
+  fillCityList(other.list, findCity(input));
+
+  // half-typed name: clear quietly instead of flashing the "select a city" error
+  if (input.value.trim() && !findCity(input)) {
+    stopRun();
+
+    statusEl.textContent = "";
+
+    return;
+  }
+
+  runComparison();
+}
+
 startSelect.addEventListener(
   "input",
-  () => {
-    fillCityList(goalSelect.list, findCity(startSelect));
-
-    runComparison();
-  }
+  () => onCityInput(startSelect, goalSelect)
 );
 
 goalSelect.addEventListener(
   "input",
-  () => {
-    fillCityList(startSelect.list, findCity(goalSelect));
-
-    runComparison();
-  }
+  () => onCityInput(goalSelect, startSelect)
 );
 
 modeSelect.addEventListener(
