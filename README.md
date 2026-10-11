@@ -1,27 +1,55 @@
 # Romania Map Pathfinding
 
+- **Web:** https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
+
 ## Assignment Brief
 
-  - Implement 1 blind search and 1 custom heuristic search.
-  - Any arbitrary cities can be selected as the start and goal states.
-  - Compare the runtime, space, and path cost between the blind and heuristic searches.
-- **Grading criteria**: Creativity, Completeness, and Presentation skills.
-- **Due date**: 9 AM Tuesday, October 13, 2026.
-- **Things to turn in**:
-  - Web App URL — https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
-  - A link to the GitHub repository, provided within the web app — see the GitHub link in the `index.html` nav bar and the `app.html` footer
-  - Presentation clip link on YouTube (approx. 10–15 minutes) — _TODO: add video link here_
+- Implement 1 blind search and 1 custom heuristic search.
+- Any city can be selected as the start and goal state.
+- Compare runtime, space, and path cost between the blind and heuristic searches.
+- **Grading criteria:** Creativity, Completeness, and Presentation.
+- **Due:** 9 AM Tuesday, October 13, 2026.
+- **Deliverables:**
+  - Web app URL (above)
+  - GitHub repository link inside the web app (nav bar on `index.html`, footer on `app.html`)
+  - Presentation clip on YouTube, approx. 10–15 minutes (above)
 
-## Algorithms implemented
+## Algorithms
 
 | | Blind search | Heuristic search |
 |---|---|---|
-| Algorithm | Uniform-Cost Search (UCS / Dijkstra's) | A* Search (Fruit Fly Scent) |
-| Informed by | Accumulated path cost only | Path cost + Fruit Fly Scent & Wind heuristic |
-| Optimal (cost-wise) | Yes | Yes (admissible heuristic) |
-| Metrics compared | Path cost, nodes expanded, max frontier size, runtime | Same |
+| Algorithm | Uniform-Cost Search (Dijkstra) | A* with the Fruit Fly Scent heuristic |
+| Expands by | `g(n)`: path cost so far | `f(n) = g(n) + h(n)` |
+| Optimal | Yes | Yes (admissible heuristic) |
 
-## Run
+Both are implemented in [js/search.js](js/search.js) and share the same loop, so the only difference in the comparison is the heuristic.
 
-  - Just clone the repo and open `index.html` directly (local)
-  - Or just visit https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
+### Custom heuristic: Fruit Fly Scent & Wind
+
+Inspired by how a fruit fly finds food: it follows a scent plume that the wind carries downstream of the source. Cities inside the plume "smell" the goal more strongly and get a smaller estimate, so A* is drawn toward them.
+
+```
+h(n)  = straightLine(n, goal) × scent(n, goal)
+scent = exp(-(r - x) / L)
+```
+
+- `r`: straight-line distance from `n` to the goal (km)
+- `x`: how far `n` lies downwind of the goal (wind blows east)
+- `L = 300 km`: scent diffusion length
+
+**Why it stays admissible:** `x ≤ r` always, so `scent ≤ 1`, so `h(n) ≤ straightLine(n, goal)`. The straight-line distance is scaled from map pixels to km using the *smallest* pixel-to-km ratio from the textbook's straight-line distances to Bucharest, so it never overestimates the real road distance. A* therefore still returns the optimal path. See [js/data.js](js/data.js).
+
+## Metrics compared
+
+For every search the app reports:
+
+- **Path cost** (km)
+- **Nodes expanded** (time complexity)
+- **Max frontier size** (space complexity)
+- **Runtime** (ms)
+
+The app also runs all 380 start/goal pairs and shows the average nodes expanded for UCS, plain straight-line A*, and Fruit Fly A*, split by whether the start is inside or outside the scent plume ([js/evidence.js](js/evidence.js)).
+
+## Run locally
+
+No build step. Clone the repo and open `index.html` in a browser. You need an internet connection for the formulas to render, since KaTeX loads from a CDN.
