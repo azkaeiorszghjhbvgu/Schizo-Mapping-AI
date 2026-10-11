@@ -534,6 +534,9 @@ resetBtn.addEventListener(
     goalSelect.value = "";
     modeSelect.value = "";
 
+    // full screen keeps its locked algorithm through a reset
+    if (lockOpt.isConnected) lockOpt.selected = true;
+
     refreshCityLists();
 
     ucsPanel.hidden = false;
@@ -586,3 +589,49 @@ modeSelect.addEventListener(
   "change",
   runComparison
 );
+
+
+// Full-screen map: borrow the real controls section so all existing listeners keep working.
+const controlsEl = document.querySelector(".controls");
+const controlsHome = controlsEl.nextElementSibling;
+// shares the panel's mode value so runComparison reads it like a normal choice
+const lockOpt = new Option("Exit Fullscreen to Select");
+let modeBeforeFullscreen = "";
+
+function rerunIfReady() {
+  if (findCity(startSelect) && findCity(goalSelect)) runComparison();
+}
+
+function exitFullscreen() {
+  const open = document.querySelector(".map-panel.is-fullscreen");
+  if (!open) return;
+  open.classList.remove("is-fullscreen");
+  document.body.classList.remove("has-fullscreen");
+  controlsHome.before(controlsEl);
+  lockOpt.remove();
+  modeSelect.value = modeBeforeFullscreen;
+  modeSelect.disabled = false;
+  rerunIfReady();
+}
+
+document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const panel = btn.closest(".map-panel");
+    const wasOpen = panel.classList.contains("is-fullscreen");
+    exitFullscreen();
+    if (wasOpen) return;
+    panel.classList.add("is-fullscreen");
+    document.body.classList.add("has-fullscreen");
+    panel.append(controlsEl);
+    modeBeforeFullscreen = modeSelect.value;
+    lockOpt.value = panel === ucsPanel ? "ucs" : "astar";
+    modeSelect.append(lockOpt);
+    lockOpt.selected = true;
+    modeSelect.disabled = true;
+    rerunIfReady();
+  });
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") exitFullscreen();
+});

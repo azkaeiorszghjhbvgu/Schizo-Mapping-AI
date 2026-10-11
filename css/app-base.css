@@ -619,3 +619,96 @@ footer a {
   }
 
 }
+
+
+.map-panel {
+  position: relative;
+}
+
+
+.fullscreen-btn {
+  position: absolute;
+
+  top: 10px;
+
+  right: 10px;
+
+  padding: 2px 8px;
+
+  background: transparent;
+
+  border: 1px solid var(--border);
+
+  color: var(--text);
+
+  font-size: 1.1rem;
+}
+
+
+.fullscreen-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+
+  transform: none;
+}
+
+
+/* author display beats the [hidden] UA rule, so a mode switch can't hide the open panel */
+.map-panel.is-fullscreen {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 500;
+
+  display: flex;
+
+  flex-direction: column;
+
+  max-width: none;
+
+  border-radius: 0;
+
+  background: var(--bg);
+}
+
+
+.map-panel.is-fullscreen .map {
+  flex: 1;
+
+  min-height: 0;
+}
+
+
+.map-panel.is-fullscreen .controls {
+  position: absolute;
+
+  top: 50px;
+
+  left: 16px;
+
+  z-index: 1;
+
+  flex-direction: column;
+
+  align-items: stretch;
+
+  max-width: 260px;
+
+  margin: 0;
+
+  background: var(--bg);
+}
+
+
+.map-panel.is-fullscreen .playback-controls {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 8px;
+}
+
+
+body.has-fullscreen {
+  overflow: hidden;
+}
