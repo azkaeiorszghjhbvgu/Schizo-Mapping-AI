@@ -1,7 +1,5 @@
-// A* evidence panel: measures the Fruit Fly heuristic in the browser over all 380
-// start/goal pairs, instead of quoting numbers in the text.
 (function buildEvidence() {
-  const IN_PLUME = 0.5; // start scent at or above this counts as "fly can smell the goal"
+  const IN_PLUME = 0.5;
 
   // [pairs, UCS nodes, straight-line A* nodes, Fruit Fly A* nodes]
   const groups = { all: [0, 0, 0, 0], in: [0, 0, 0, 0], out: [0, 0, 0, 0] };

@@ -1,7 +1,3 @@
-// Romania map dataset (cities, coordinates, and road distances)
-// Coordinates are the standard AIMA plotting coordinates (pixel-like, not GPS),
-// used here consistently for both drawing the map and computing the straight-line heuristic.
-
 const CITY_COORDS = {
   Arad: [91, 492],
   Bucharest: [400, 327],
@@ -74,7 +70,6 @@ const SLD_TO_BUCHAREST = {
   Zerind: 374,
 };
 
-
 function pixelDist(a, b) {
   const [ax, ay] = CITY_COORDS[a];
   const [bx, by] = CITY_COORDS[b];
@@ -97,9 +92,6 @@ const PIXEL_TO_KM_SCALE = (() => {
     }
   }
 
-  // Min ratio (not average) keeps the estimate low. That alone doesn't prove admissibility
-  // for every pair, but it was checked: on all 380 city pairs the heuristic never exceeds
-  // the true shortest road distance, and it is consistent on every edge.
   return Math.min(...ratios);
 })();
 
@@ -110,27 +102,17 @@ function straightLineHeuristic(a, b) {
   );
 }
 
-// Fruit Fly Scent Heuristic:
-// A fly finds food by sensing the odor plume the wind carries away from it. For a point
-// source in a steady wind, the advection-diffusion equation gives a concentration of
-// c ~ exp(-(r - x) / L) / r, where r = distance to the source, x = distance downwind of it,
-// and L = 2D/U (diffusion over wind speed). We keep the exp(...) part as a 0..1 scent
-// strength: 1 anywhere straight downwind, fading off to the sides and upwind.
-// h = straight-line distance * scent strength. A strong scent gives full guidance;
-// no scent leaves the fly blind (h -> 0, like UCS).
-// Because strength <= 1, h never exceeds straight-line distance, so it stays admissible.
-// Checked on all 380 city pairs: admissible, consistent on every edge, always optimal.
-const WIND_DIRECTION = [1, 0]; // prevailing wind blows west -> east (+x)
-const SCENT_DIFFUSION_KM = 300; // L: larger = scent spreads further sideways/upwind
+// Fruit Fly scent: exp(-(r - x) / L), r = distance to goal, x = distance downwind of it.
+// h = straight-line distance * scent; scent <= 1 keeps h admissible.
+const WIND_DIRECTION = [1, 0];
+const SCENT_DIFFUSION_KM = 300;
 
-// any map point (x, y), so the plume can also be drawn between cities
 function scentStrengthAt(x, y, goal) {
   const [gx, gy] = CITY_COORDS[goal];
 
   const r = Math.hypot(x - gx, y - gy) * PIXEL_TO_KM_SCALE;
   if (r === 0) return 1;
 
-  // how far the fly sits downwind of the food
   const downwind =
     ((x - gx) * WIND_DIRECTION[0] + (y - gy) * WIND_DIRECTION[1]) *
     PIXEL_TO_KM_SCALE;
@@ -145,8 +127,6 @@ function scentStrength(city, goal) {
 function fruitFlyWindScentHeuristic(city, goal) {
   return straightLineHeuristic(city, goal) * scentStrength(city, goal);
 }
-
-
 
 function buildGraph() {
   const graph = {};

@@ -1,5 +1,4 @@
 (function () {
-  // fade the page out before following the page-to-page links (landing CTA and the navbar home link)
   document.querySelectorAll(".cta, .navbar-home").forEach(function (link) {
     link.addEventListener("click", function (e) {
       e.preventDefault();
@@ -17,7 +16,6 @@
     });
   });
 
-  // coming back via the Back button restores the faded-out page from cache, so undo the fade
   window.addEventListener("pageshow", function (event) {
     if (event.persisted) {
       document.body.style.animation = "none";

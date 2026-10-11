@@ -1,11 +1,3 @@
-
-// Two search strategies over the Romania road-map graph:
-// 1) Uniform-Cost Search (UCS / Dijkstra's)
-//    Blind / uninformed search, expands the lowest path cost first.
-//
-// 2) A* Search
-//    Informed search, uses the Fruit Fly Scent heuristic (wind-discounted straight-line distance).
-
 function reconstructPath(cameFrom, goal) {
   const path = [goal];
   let cur = goal;
@@ -15,20 +7,14 @@ function reconstructPath(cameFrom, goal) {
     path.push(cur);
   }
 
-  path.reverse();
-
-  return path;
+  return path.reverse();
 }
 
 function pathCost(path) {
   let cost = 0;
 
   for (let i = 0; i < path.length - 1; i++) {
-    const edge = GRAPH[path[i]].find(
-      (e) => e.to === path[i + 1]
-    );
-
-    cost += edge.cost;
+    cost += GRAPH[path[i]].find((e) => e.to === path[i + 1]).cost;
   }
 
   return cost;
@@ -36,105 +22,45 @@ function pathCost(path) {
 
 function uniformCostSearch(start, goal) {
   const t0 = performance.now();
-
-
-  const frontier = [
-    {
-      node: start,
-      g: 0
-    }
-  ];
-
+  const frontier = [{ node: start, g: 0 }];
   const cameFrom = new Map();
-
-  const bestG = new Map([
-    [start, 0]
-  ]);
-
+  const bestG = new Map([[start, 0]]);
   const closed = new Set();
-
   const expansionOrder = [];
-
   let maxFrontierSize = 1;
   let nodesExpanded = 0;
 
   while (frontier.length > 0) {
-    maxFrontierSize = Math.max(
-      maxFrontierSize,
-      frontier.length
-    );
+    maxFrontierSize = Math.max(maxFrontierSize, frontier.length);
 
     let bestIdx = 0;
-
     for (let i = 1; i < frontier.length; i++) {
-      if (
-        frontier[i].g <
-        frontier[bestIdx].g
-      ) {
-        bestIdx = i;
-      }
+      if (frontier[i].g < frontier[bestIdx].g) bestIdx = i;
     }
 
-    const { node, g } =
-      frontier.splice(
-        bestIdx,
-        1
-      )[0];
+    const { node, g } = frontier.splice(bestIdx, 1)[0];
 
-    if (closed.has(node)) {
-      continue;
-    }
+    if (closed.has(node)) continue;
 
     closed.add(node);
-
     nodesExpanded++;
-
     expansionOrder.push(node);
 
-    
     if (node === goal) {
       return finishResult({
         found: true,
-
-        path: reconstructPath(
-          cameFrom,
-          goal
-        ),
-
-        cameFrom,
-        expansionOrder,
-        nodesExpanded,
-        maxFrontierSize,
-        t0,
+        path: reconstructPath(cameFrom, goal),
+        cameFrom, expansionOrder, nodesExpanded, maxFrontierSize, t0,
       });
     }
 
-    for (
-      const { to, cost }
-      of GRAPH[node]
-    ) {
-      const tentativeG =
-        g + cost;
+    for (const { to, cost } of GRAPH[node]) {
+      const tentativeG = g + cost;
 
-      if (
-        !bestG.has(to) ||
-        tentativeG <
-          bestG.get(to)
-      ) {
-        bestG.set(
-          to,
-          tentativeG
-        );
-
-        cameFrom.set(
-          to,
-          node
-        );
-
-        frontier.push({
-          node: to,
-          g: tentativeG
-        });
+      if (!bestG.has(to) || tentativeG < bestG.get(to)) {
+        bestG.set(to, tentativeG);
+        cameFrom.set(to, node);
+        frontier.push({ node: to, g: tentativeG });
       }
     }
   }
@@ -142,176 +68,71 @@ function uniformCostSearch(start, goal) {
   return finishResult({
     found: false,
     path: null,
-    cameFrom,
-    expansionOrder,
-    nodesExpanded,
-    maxFrontierSize,
-    t0
+    cameFrom, expansionOrder, nodesExpanded, maxFrontierSize, t0,
   });
 }
 
-// A* Search using the Fruit Fly Scent Heuristic
-// h is swappable so the evidence panel can run a plain straight-line baseline
 function aStarSearch(start, goal, h = fruitFlyWindScentHeuristic) {
   const t0 = performance.now();
-
-
-
-  // Start node: f = g (0) + h (scent heuristic)
-  const frontier = [
-    {
-      node: start,
-      g: 0,
-      f: h(
-        start,
-        goal
-      )
-    }
-  ];
-
+  const frontier = [{ node: start, g: 0, f: h(start, goal) }];
   const cameFrom = new Map();
-
-  const bestG = new Map([
-    [start, 0]
-  ]);
-
+  const bestG = new Map([[start, 0]]);
   const closed = new Set();
-
   const expansionOrder = [];
-
   let maxFrontierSize = 1;
   let nodesExpanded = 0;
 
   while (frontier.length > 0) {
-    maxFrontierSize = Math.max(
-      maxFrontierSize,
-      frontier.length
-    );
+    maxFrontierSize = Math.max(maxFrontierSize, frontier.length);
 
-  
-
-    // Pick node with lowest f-score
     let bestIdx = 0;
-
     for (let i = 1; i < frontier.length; i++) {
-      if (
-        frontier[i].f <
-        frontier[bestIdx].f
-      ) {
-        bestIdx = i;
-      }
+      if (frontier[i].f < frontier[bestIdx].f) bestIdx = i;
     }
 
-    const { node, g } =
-      frontier.splice(
-        bestIdx,
-        1
-      )[0];
+    const { node, g } = frontier.splice(bestIdx, 1)[0];
 
-    if (closed.has(node)) {
-      continue;
-    }
+    if (closed.has(node)) continue;
 
     closed.add(node);
-
     nodesExpanded++;
-
     expansionOrder.push(node);
 
-    // Goal found
     if (node === goal) {
       return finishResult({
         found: true,
-
-        path: reconstructPath(
-          cameFrom,
-          goal
-        ),
-
-        cameFrom,
-        expansionOrder,
-        nodesExpanded,
-        maxFrontierSize,
-        t0,
+        path: reconstructPath(cameFrom, goal),
+        cameFrom, expansionOrder, nodesExpanded, maxFrontierSize, t0,
       });
     }
 
-  
-    // Check neighbors: calculate tentative g + scent h-score
-    for (
-      const { to, cost }
-      of GRAPH[node]
-    ) {
-      const tentativeG =
-        g + cost;
+    for (const { to, cost } of GRAPH[node]) {
+      const tentativeG = g + cost;
 
-      if (
-        !bestG.has(to) ||
-        tentativeG <
-          bestG.get(to)
-      ) {
-        bestG.set(
-          to,
-          tentativeG
-        );
-
-        cameFrom.set(
-          to,
-          node
-        );
-
-        frontier.push({
-          node: to,
-          g: tentativeG,
-          f:
-            tentativeG +
-            h(
-              to,
-              goal
-            )
-        });
+      if (!bestG.has(to) || tentativeG < bestG.get(to)) {
+        bestG.set(to, tentativeG);
+        cameFrom.set(to, node);
+        frontier.push({ node: to, g: tentativeG, f: tentativeG + h(to, goal) });
       }
     }
   }
 
-  
   return finishResult({
     found: false,
     path: null,
-    cameFrom,
-    expansionOrder,
-    nodesExpanded,
-    maxFrontierSize,
-    t0
+    cameFrom, expansionOrder, nodesExpanded, maxFrontierSize, t0,
   });
 }
 
-function finishResult({
-  found,
-  path,
-  cameFrom,
-  expansionOrder,
-  nodesExpanded,
-  maxFrontierSize,
-  t0
-}) {
-  const runtimeMs =
-    performance.now() -
-    t0;
-
+function finishResult({ found, path, cameFrom, expansionOrder, nodesExpanded, maxFrontierSize, t0 }) {
   return {
     found,
     path,
     cameFrom,
-
-    cost:
-      found
-        ? pathCost(path)
-        : null,
-
+    cost: found ? pathCost(path) : null,
     expansionOrder,
     nodesExpanded,
     maxFrontierSize,
-      runtimeMs,
+    runtimeMs: performance.now() - t0,
   };
 }

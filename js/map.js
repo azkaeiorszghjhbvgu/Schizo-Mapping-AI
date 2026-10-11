@@ -1,4 +1,3 @@
-
 const SVG_NS = "http://www.w3.org/2000/svg";
 
 function el(tag, attrs = {}) {
@@ -76,23 +75,14 @@ function createCityIcon(city, x, y) {
 function drawBaseMap(svg) {
   svg.innerHTML = "";
 
-  svg.setAttribute(
-    "viewBox",
-    "45 250 560 350"
-  );
+  svg.setAttribute("viewBox", "45 250 560 350");
 
   for (const [a, b] of EDGES) {
     const [x1, y1] = CITY_COORDS[a];
     const [x2, y2] = CITY_COORDS[b];
 
     svg.appendChild(
-      el("line", {
-        x1,
-        y1,
-        x2,
-        y2,
-        class: "edge"
-      })
+      el("line", { x1, y1, x2, y2, class: "edge" })
     );
   }
 
@@ -104,12 +94,7 @@ function drawBaseMap(svg) {
       "data-city": city
     });
 
-    const icon =
-      createCityIcon(
-        city,
-        x,
-        y
-      );
+    const icon = createCityIcon(city, x, y);
 
     group.appendChild(icon);
 
@@ -128,167 +113,51 @@ function drawBaseMap(svg) {
   }
 }
 
-function setNodeState(
-  svg,
-  city,
-  stateClass
-) {
-  const node = svg.querySelector(
-    `.city-icon[data-city="${city}"]`
-  );
+function setNodeState(svg, city, stateClass) {
+  const node = svg.querySelector(`.city-icon[data-city="${city}"]`);
 
-  if (node) {
-    node.classList.add(
-      stateClass
-    );
-  }
+  if (node) node.classList.add(stateClass);
 }
 
-function highlightPathEdges(
-  svg,
-  path
-) {
-  if (
-    !path ||
-    path.length < 2
-  ) {
-    return;
-  }
+function findEdge(svg, a, b) {
+  const [ax, ay] = CITY_COORDS[a];
+  const [bx, by] = CITY_COORDS[b];
 
-  for (
-    let i = 0;
-    i < path.length - 1;
-    i++
-  ) {
-    const a = path[i];
-    const b = path[i + 1];
+  for (const line of svg.querySelectorAll("line.edge")) {
+    const x1 = +line.getAttribute("x1");
+    const y1 = +line.getAttribute("y1");
+    const x2 = +line.getAttribute("x2");
+    const y2 = +line.getAttribute("y2");
 
-    svg
-      .querySelectorAll("line.edge")
-      .forEach((line) => {
-        const x1 =
-          +line.getAttribute("x1");
+    const forward = x1 === ax && y1 === ay && x2 === bx && y2 === by;
+    const backward = x1 === bx && y1 === by && x2 === ax && y2 === ay;
 
-        const y1 =
-          +line.getAttribute("y1");
-
-        const x2 =
-          +line.getAttribute("x2");
-
-        const y2 =
-          +line.getAttribute("y2");
-
-        const [ax, ay] =
-          CITY_COORDS[a];
-
-        const [bx, by] =
-          CITY_COORDS[b];
-
-        const matchesForward =
-          x1 === ax &&
-          y1 === ay &&
-          x2 === bx &&
-          y2 === by;
-
-        const matchesBackward =
-          x1 === bx &&
-          y1 === by &&
-          x2 === ax &&
-          y2 === ay;
-
-        if (
-          matchesForward ||
-          matchesBackward
-        ) {
-          line.classList.add(
-            "edge-path"
-          );
-        }
-      });
-  }
-}
-
-function findEdge(
-  svg,
-  a,
-  b
-) {
-  const [ax, ay] =
-    CITY_COORDS[a];
-
-  const [bx, by] =
-    CITY_COORDS[b];
-
-  const lines =
-    svg.querySelectorAll(
-      "line.edge"
-    );
-
-  for (const line of lines) {
-    const x1 =
-      +line.getAttribute("x1");
-
-    const y1 =
-      +line.getAttribute("y1");
-
-    const x2 =
-      +line.getAttribute("x2");
-
-    const y2 =
-      +line.getAttribute("y2");
-
-    const forward =
-      x1 === ax &&
-      y1 === ay &&
-      x2 === bx &&
-      y2 === by;
-
-    const backward =
-      x1 === bx &&
-      y1 === by &&
-      x2 === ax &&
-      y2 === ay;
-
-    if (
-      forward ||
-      backward
-    ) {
-      return line;
-    }
+    if (forward || backward) return line;
   }
 
   return null;
 }
 
-function animateExplorationEdge(
-  svg,
-  fromCity,
-  toCity
-) {
-  const edge =
-    findEdge(
-      svg,
-      fromCity,
-      toCity
-    );
+function highlightPathEdges(svg, path) {
+  if (!path) return;
 
-  if (!edge) {
-    return;
+  for (let i = 0; i < path.length - 1; i++) {
+    findEdge(svg, path[i], path[i + 1])?.classList.add("edge-path");
   }
+}
 
-  edge.classList.add(
-    "edge-explored"
-  );
- 
+function animateExplorationEdge(svg, fromCity, toCity) {
+  const edge = findEdge(svg, fromCity, toCity);
+
+  if (!edge) return;
+
+  edge.classList.add("edge-explored");
+  // restart the CSS animation
   edge.style.animation = "none";
-
   void edge.getBoundingClientRect();
-
   edge.style.animation = "";
 }
 
-// Fruit fly scent plume for the A* map: samples the real heuristic's scentStrengthAt()
-// on a grid, so the cloud is the formula itself, not a hand-drawn shape.
 const SCENT_CELL = 12;
 
 function drawScentField(svg, goal) {
@@ -302,8 +171,6 @@ function drawScentField(svg, goal) {
   filter.appendChild(el("feGaussianBlur", { stdDeviation: SCENT_CELL * 0.6 }));
   defs.appendChild(filter);
 
-  // .map has overflow: visible, so keep the cloud inside the view or it spills over the panel;
-  // a blurred mask fades it out at the edges instead of cutting it off in a hard rectangle
   const maskId = `${svg.id}-scent-mask`;
   const featherId = `${svg.id}-scent-feather`;
   const feather = el("filter", { id: featherId });
@@ -333,14 +200,12 @@ function drawScentField(svg, goal) {
 
   const field = el("g", { class: "scent-field", filter: `url(#${filterId})` });
 
-  // overshoot the view so the blur doesn't fade the map edges
   const pad = SCENT_CELL * 3;
 
   for (let x = vx - pad; x < vx + vw + pad; x += SCENT_CELL) {
     for (let y = vy - pad; y < vy + vh + pad; y += SCENT_CELL) {
       const s = scentStrengthAt(x + SCENT_CELL / 2, y + SCENT_CELL / 2, goal);
 
-      // skip invisible cells to keep the DOM small
       if (s < 0.03) continue;
 
       field.appendChild(
@@ -349,7 +214,6 @@ function drawScentField(svg, goal) {
           y,
           width: SCENT_CELL,
           height: SCENT_CELL,
-          // squared only for contrast; exact values are in each city's tooltip
           "fill-opacity": (s * s * 0.3).toFixed(3),
         })
       );
@@ -359,7 +223,6 @@ function drawScentField(svg, goal) {
   const masked = el("g", { mask: `url(#${maskId})` });
   masked.appendChild(field);
 
-  // under the roads and cities
   svg.prepend(defs, masked);
 
   const wind = el("g", {
@@ -368,7 +231,6 @@ function drawScentField(svg, goal) {
   });
   wind.appendChild(el("line", { x1: 0, y1: 0, x2: 44, y2: 0 }));
   wind.appendChild(el("path", { d: "M44 -5 L54 0 L44 5 Z" }));
-  // beside the arrow, not under it, so it stays clear of Drobeta's label
   const label = el("text", { x: 62, y: 4 });
   label.textContent = "wind / scent plume";
   wind.appendChild(label);
