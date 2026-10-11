@@ -611,6 +611,7 @@ function exitFullscreen() {
   lockOpt.remove();
   modeSelect.value = modeBeforeFullscreen;
   modeSelect.disabled = false;
+  modeSelect.parentElement.title = "";
   rerunIfReady();
 }
 
@@ -628,6 +629,9 @@ document.querySelectorAll(".fullscreen-btn").forEach((btn) => {
     modeSelect.append(lockOpt);
     lockOpt.selected = true;
     modeSelect.disabled = true;
+    // on the wrapping label: hover on a disabled select is unreliable across browsers
+    modeSelect.parentElement.title =
+      `Currently on ${modeSelect.querySelector(`option[value="${lockOpt.value}"]`).text}`;
     rerunIfReady();
   });
 });
