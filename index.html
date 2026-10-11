@@ -77,13 +77,12 @@
   </main>
 
 
+  <script src="js/navbar.js"></script>
+
   <script>
 
-    const images = [
-      "assets/romania.jpeg",
-      "assets/romania2.jpeg",
-      "assets/romania3.jpeg"
-    ];
+    const track = document.getElementById("imageTrack");
+    const imageCount = track.children.length;
 
     let currentImage = 0;
     let autoPlayTimer = null;
@@ -92,13 +91,12 @@
     function changeImage(direction) {
       currentImage += direction;
 
-      if (currentImage >= images.length) {
+      if (currentImage >= imageCount) {
         currentImage = 0;
       } else if (currentImage < 0) {
-        currentImage = images.length - 1;
+        currentImage = imageCount - 1;
       }
 
-      const track = document.getElementById("imageTrack");
       track.style.transform = `translateX(-${currentImage * 100}%)`;
 
       resetTimer();
@@ -112,34 +110,6 @@
     }
 
     resetTimer();
-    
-    window.addEventListener("pageshow", (event) => {
-      if (event.persisted) {
-        document.body.style.animation = "none";
-        document.body.classList.remove("fade-out");
-      }
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-      const ctaButton = document.querySelector(".cta");
-
-      if (ctaButton) {
-        ctaButton.addEventListener("click", (e) => {
-          e.preventDefault();
-          const targetUrl = ctaButton.getAttribute("href");
-
-          document.body.style.animation = "none";
-
-          void document.body.offsetHeight;
-          
-          document.body.classList.add("fade-out");
-
-          setTimeout(() => {
-            window.location.href = targetUrl;
-          }, 400);
-        });
-      }
-    });
 
   </script>
 
