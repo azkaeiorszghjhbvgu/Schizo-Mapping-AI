@@ -25,8 +25,6 @@ scent = exp(-(r - x) / L)
 - `x`: how far `n` lies downwind of the goal (wind blows east)
 - `L = 300 km`: scent diffusion length
 
-**Why it stays admissible:** `x ≤ r` always, so `scent ≤ 1`, so `h(n) ≤ straightLine(n, goal)`. The straight-line distance is scaled from map pixels to km using the *smallest* pixel-to-km ratio from the textbook's straight-line distances to Bucharest, so it never overestimates the real road distance. A* therefore still returns the optimal path. See [js/data.js](js/data.js).
-
 ## Metrics compared
 
 For every search the app reports:
@@ -36,8 +34,8 @@ For every search the app reports:
 - **Max frontier size** (space complexity)
 - **Runtime** (ms)
 
-The app also runs all 380 start/goal pairs and shows the average nodes expanded for UCS, plain straight-line A*, and Fruit Fly A*, split by whether the start is inside or outside the scent plume ([js/evidence.js](js/evidence.js)).
+Runs all 380 start/goal pairs and shows the average nodes expanded for UCS, plain straight-line A*, and Fruit Fly A*, split by whether the start is inside or outside the scent plume ([js/evidence.js](js/evidence.js)).
 
 ## Run locally
 
-No build step. Clone the repo and open `index.html` in a browser. You need an internet connection for the formulas to render, since KaTeX loads from a CDN.
+Clone the repo and open `index.html` in a browser. Internet is needed connection for the formulas to render, since KaTeX loads from a CDN.
