@@ -8,7 +8,7 @@
 - **Grading criteria**: Creativity, Completeness, and Presentation skills.
 - **Due date**: 9 AM Tuesday, October 13, 2026.
 - **Things to turn in**:
-  - Web App URL (must be deployed onto a host computer) — https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
+  - Web App URL — https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
   - A link to the GitHub repository, provided within the web app — see the GitHub link in the `index.html` nav bar and the `app.html` footer
   - Presentation clip link on YouTube (approx. 10–15 minutes) — _TODO: add video link here_
 
@@ -21,14 +21,7 @@
 | Optimal (cost-wise) | Yes | Yes (admissible heuristic) |
 | Metrics compared | Path cost, nodes expanded, max frontier size, runtime | Same |
 
-## Run locally
+## Run
 
-Just open `index.html` directly
-
-
-## Troubleshooting
-- **Page Transition Glitches**: if the smooth fade transitions don't appear for you, perform a hard refresh (`Ctrl + Shift + R` or `Cmd + Shift + R`) to clear cached static assets.
-
-## Notes
-
-Web now changed to https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
+Just open `index.html` directly (local)
+Web https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
