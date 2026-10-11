@@ -23,5 +23,5 @@
 
 ## Run
 
-  - Just open `index.html` directly (local)
-  - Web https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
+  - Just clone the repo and open `index.html` directly (local)
+  - Or just visit https://azkaeiorszghjhbvgu.github.io/Schizo-Mapping-AI/
