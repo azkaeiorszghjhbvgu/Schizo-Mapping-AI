@@ -28,13 +28,9 @@ const EMPTY_ROW =
   '<tr class="empty-row"><td colspan="6">Results appear here once a search finishes.</td></tr>';
 
 
-// typed text can be anything, so map it to a real city name (any case) or undefined
-function findCity(input) {
-  const typed = input.value.trim().toLowerCase();
-
-  return CITY_NAMES.find(
-    (city) => city.toLowerCase() === typed
-  );
+// selected city name, or undefined while the placeholder is showing
+function findCity(select) {
+  return select.value || undefined;
 }
 
 
@@ -55,25 +51,30 @@ function stopRun() {
 
 
 // each box's list leaves out the city chosen in the other box
-function fillCityList(list, excludeCity) {
-  list.innerHTML = "";
+// a <select>, not a <datalist>: iOS Safari shows no dropdown for datalists
+function fillCityList(select, excludeCity) {
+  const current = select.value;
+
+  select.innerHTML =
+    '<option value="" selected disabled hidden>Select city</option>';
 
   for (const city of CITY_NAMES) {
     if (city === excludeCity) {
       continue;
     }
 
-    const opt = document.createElement("option");
+    select.add(new Option(city, city));
+  }
 
-    opt.value = city;
-
-    list.appendChild(opt);
+  // rebuilding the options drops the selection, so put it back
+  if (current && current !== excludeCity) {
+    select.value = current;
   }
 }
 
 function refreshCityLists() {
-  fillCityList(startSelect.list, findCity(goalSelect));
-  fillCityList(goalSelect.list, findCity(startSelect));
+  fillCityList(startSelect, findCity(goalSelect));
+  fillCityList(goalSelect, findCity(startSelect));
 }
 
 refreshCityLists();
@@ -303,16 +304,6 @@ async function runComparison() {
     return;
   }
 
-  // the lists hide this, but the same name can still be typed into both boxes
-  if (start === goal) {
-    stopRun();
-
-    statusEl.textContent =
-      "Start and goal must be different cities.";
-
-    return;
-  }
-
   animationToken++;
 
   const token =
@@ -530,31 +521,22 @@ speedSelect.addEventListener(
 );
 
 
-// "input" also fires when a city is picked from the datalist
-// only refill the other box's list, so the open list under the cursor doesn't flicker
-function onCityInput(input, other) {
-  fillCityList(other.list, findCity(input));
-
-  // half-typed name: clear quietly instead of flashing the "select a city" error
-  if (input.value.trim() && !findCity(input)) {
-    stopRun();
-
-    statusEl.textContent = "";
-
-    return;
-  }
-
-  runComparison();
-}
-
 startSelect.addEventListener(
-  "input",
-  () => onCityInput(startSelect, goalSelect)
+  "change",
+  () => {
+    fillCityList(goalSelect, findCity(startSelect));
+
+    runComparison();
+  }
 );
 
 goalSelect.addEventListener(
-  "input",
-  () => onCityInput(goalSelect, startSelect)
+  "change",
+  () => {
+    fillCityList(startSelect, findCity(goalSelect));
+
+    runComparison();
+  }
 );
 
 modeSelect.addEventListener(
