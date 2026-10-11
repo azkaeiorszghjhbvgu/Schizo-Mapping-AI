@@ -671,7 +671,7 @@ footer a {
   background: var(--bg);
 
   /* reserve the sidebar column so the dock never covers the map */
-  padding-left: calc(16px + 300px + 16px);
+  padding-left: calc(16px + 340px + 16px);
 }
 
 
@@ -697,7 +697,7 @@ footer a {
 
   gap: 12px;
 
-  width: 300px;
+  width: 340px;
 
   max-height: calc(100% - 66px);
 
@@ -716,7 +716,7 @@ footer a {
 
   margin: 0;
 
-  padding: 12px 14px;
+  padding: 12px 6px;
 
   font-size: 0.75rem;
 
@@ -725,17 +725,23 @@ footer a {
 
 
 .map-panel.is-fullscreen .results table {
-  font-size: 0.72rem;
+  font-size: 0.8rem;
 }
 
 
 .map-panel.is-fullscreen .results th,
 .map-panel.is-fullscreen .results td {
-  padding: 5px 4px;
+  padding: 5px 2px;
 }
 
 
-/* the pair count matters least, and the Fruit Fly column must fit in 300px */
+/* monospace city names are what push the comparison table past the sidebar width */
+.map-panel.is-fullscreen .path-cell {
+  font-family: inherit;
+}
+
+
+/* the pair count matters least, and the Fruit Fly column must fit the sidebar */
 .map-panel.is-fullscreen .evidence th:nth-child(2),
 .map-panel.is-fullscreen .evidence td:nth-child(2) {
   display: none;

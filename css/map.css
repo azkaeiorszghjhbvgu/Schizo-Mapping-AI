@@ -178,7 +178,7 @@
 .wind-indicator line {
   stroke: #9fb3c8;
 
-  stroke-width: 2;
+  stroke-width: 2.5;
 }
 
 
@@ -190,5 +190,5 @@
 .wind-indicator text {
   fill: #9fb3c8;
 
-  font-size: 9px;
+  font-size: 12px;
 }

@@ -302,11 +302,34 @@ function drawScentField(svg, goal) {
   filter.appendChild(el("feGaussianBlur", { stdDeviation: SCENT_CELL * 0.6 }));
   defs.appendChild(filter);
 
-  // .map has overflow: visible, so clip the cloud to the view or it spills over the panel
-  const clipId = `${svg.id}-scent-clip`;
-  const clip = el("clipPath", { id: clipId });
-  clip.appendChild(el("rect", { x: vx, y: vy, width: vw, height: vh }));
-  defs.appendChild(clip);
+  // .map has overflow: visible, so keep the cloud inside the view or it spills over the panel;
+  // a blurred mask fades it out at the edges instead of cutting it off in a hard rectangle
+  const maskId = `${svg.id}-scent-mask`;
+  const featherId = `${svg.id}-scent-feather`;
+  const feather = el("filter", { id: featherId });
+  feather.appendChild(el("feGaussianBlur", { stdDeviation: 8 }));
+  defs.appendChild(feather);
+
+  const mask = el("mask", {
+    id: maskId,
+    maskUnits: "userSpaceOnUse",
+    x: vx,
+    y: vy,
+    width: vw,
+    height: vh,
+  });
+  const inset = 12;
+  mask.appendChild(
+    el("rect", {
+      x: vx + inset,
+      y: vy + inset,
+      width: vw - inset * 2,
+      height: vh - inset * 2,
+      fill: "#fff",
+      filter: `url(#${featherId})`,
+    })
+  );
+  defs.appendChild(mask);
 
   const field = el("g", { class: "scent-field", filter: `url(#${filterId})` });
 
@@ -333,19 +356,20 @@ function drawScentField(svg, goal) {
     }
   }
 
-  const clipped = el("g", { "clip-path": `url(#${clipId})` });
-  clipped.appendChild(field);
+  const masked = el("g", { mask: `url(#${maskId})` });
+  masked.appendChild(field);
 
   // under the roads and cities
-  svg.prepend(defs, clipped);
+  svg.prepend(defs, masked);
 
   const wind = el("g", {
     class: "wind-indicator",
-    transform: `translate(${vx + 12}, ${vy + 16})`,
+    transform: `translate(${vx + 12}, ${vy + 18})`,
   });
-  wind.appendChild(el("line", { x1: 0, y1: 0, x2: 34, y2: 0 }));
-  wind.appendChild(el("path", { d: "M34 -4 L42 0 L34 4 Z" }));
-  const label = el("text", { x: 0, y: 14 });
+  wind.appendChild(el("line", { x1: 0, y1: 0, x2: 44, y2: 0 }));
+  wind.appendChild(el("path", { d: "M44 -5 L54 0 L44 5 Z" }));
+  // beside the arrow, not under it, so it stays clear of Drobeta's label
+  const label = el("text", { x: 62, y: 4 });
   label.textContent = "wind / scent plume";
   wind.appendChild(label);
   svg.appendChild(wind);
